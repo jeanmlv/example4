@@ -1,21 +1,9 @@
 # example4
 
-Hi everyone,
+Subject: Increase request body size for ARD Explorer Domino App
 
-Just checking in to see if there's any update on the ADaM Planning Tool dashboard access for Pablo's team.
+The ARD Explorer Streamlit App is configured with server.maxUploadSize = 500 MB and correctly displays a 500 MB upload limit. However, uploading a 183 MB XLSX file returns HTTP status 413 – Request Entity Too Large.
 
-Thanks in advance,
-Jean
+This suggests that the request is being rejected by the Domino App reverse proxy, ingress, or gateway before reaching Streamlit.
 
-Hi all,
-
-I wanted to follow up on this request for access to the ADaM Planning Tool dashboard.
-
-As mentioned, Pablo's team has been struggling to identify which ADaM/SDTM domains are already available, and access to the dashboard (even as a pilot) would help a lot with that.
-
-Is there any update on the feasibility of granting access, or on who the point of contact for APT would be?
-
-Happy to align further if useful.
-
-Best,
-Jean
+Could you please verify the maximum request body size configured for Domino Apps and increase it to at least 500 MB for this application, including a reasonable overhead above 500 MB?
