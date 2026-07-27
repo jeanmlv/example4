@@ -1,28 +1,13 @@
 # example4
 
-| Variable     | Significado                                                                        | Origem típica (ADaM)                                      |
-| ------------ | ---------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| **TRT01P**   | Planned Treatment for Period 1                                                     | **ADSL**                                                  |
-| **TRT01PN**  | Planned Treatment Code (Numeric) for Period 1                                      | **ADSL**                                                  |
-| **TRT01A**   | Actual Treatment for Period 1                                                      | **ADSL**                                                  |
-| **TRT01AN**  | Actual Treatment Code (Numeric) for Period 1                                       | **ADSL**                                                  |
-| **TRT02P**   | Planned Treatment for Period 2                                                     | **ADSL**                                                  |
-| **TRT02PN**  | Planned Treatment Code (Numeric) for Period 2                                      | **ADSL**                                                  |
-| **TRT02A**   | Actual Treatment for Period 2                                                      | **ADSL**                                                  |
-| **TRT02AN**  | Actual Treatment Code (Numeric) for Period 2                                       | **ADSL**                                                  |
-| **AGE**      | Age                                                                                | **ADSL**                                                  |
-| **SEX**      | Sex                                                                                | **ADSL**                                                  |
-| **RACE**     | Race                                                                               | **ADSL**                                                  |
-| **COUNTRY**  | Country                                                                            | **ADSL**                                                  |
-| **ETHNIC**   | Ethnicity                                                                          | **ADSL**                                                  |
-| **VISIT**    | Study Visit                                                                        | **SDTM → utilizado em ADaM longitudinais**                |
-| **VISITNUM** | Study Visit Number                                                                 | **SDTM → utilizado em ADaM longitudinais**                |
-| **SITEID**   | Study Site Identifier                                                              | **ADSL**                                                  |
-| **SUBJID**   | Subject Identifier                                                                 | **ADSL** (derivado do DM)                                 |
-| **ABLFL**    | Baseline Record Flag                                                               | **ADaM longitudinal** (ADLB, ADVS, ADSCDAI, ADHIST, etc.) |
-| **APOBLFL**  | Post-Baseline Analysis Flag *(ou Analysis Post-Baseline Flag, conforme o estudo)*  | **ADaM longitudinal**                                     |
-| **RANDFL**   | Randomized Population Flag                                                         | **ADSL**                                                  |
-| **FASFL**    | Full Analysis Set Flag                                                             | **ADSL**                                                  |
-| **SAFFL**    | Safety Analysis Set Flag                                                           | **ADSL**                                                  |
-| **PASFL**    | Per Protocol Analysis Set Flag *(ou Primary Analysis Set Flag, dependendo do SAP)* | **ADSL**                                                  |
-| **USMFL**    | Usually **Use of Study Medication Flag** *(nome pode variar entre estudos)*        | **ADSL**                                                  |
+Hi Julie,
+
+Thanks for your response.
+
+Yes, that's correct. The issue is related to the Domino App infrastructure rather than the DASH application itself.
+
+The application works correctly when running locally with Streamlit, including uploads of files larger than 100 MB. The problem only occurs after deploying it as a Domino App, where requests larger than approximately 100 MB are rejected with HTTP 413, even though the Streamlit configuration is already set to allow uploads up to 500 MB.
+
+Could you please help route this ticket to the appropriate Domino support team, or let me know if I should open a new ticket under the Domino support queue?
+
+Thank you!
