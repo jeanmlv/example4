@@ -1,30 +1,28 @@
 # example4
 
-Hello Team,
-
-I am experiencing an issue with a Domino Streamlit application (ARD Explorer - Clinical Dashboard).
-
-Issue
-
-The application is configured with:
-
-server.maxUploadSize = 500
-server.maxMessageSize = 500
-
-The upload component correctly displays "Limit 500 MB per file".
-
-However, uploads larger than approximately 100 MB consistently fail with HTTP 413 (Request Entity Too Large).
-
-For example:
-
-✅ Files smaller than ~100 MB upload successfully.
-❌ A 183 MB XLSX file immediately returns HTTP 413.
-Troubleshooting already performed
-Tested the same application locally using Streamlit.
-The 183 MB file uploads successfully without any issues.
-The problem only occurs after deploying the application as a Domino App.
-The Streamlit configuration has already been updated to allow 500 MB uploads.
-
-Based on these tests, it appears the request is being rejected before reaching the Streamlit application, possibly by the Domino App infrastructure (reverse proxy / ingress / gateway).
-
-Could you please verify whether there is a request body size limit configured for Domino Apps and, if possible, increase it to support uploads up to 500 MB?
+| Variable     | Significado                                                                        | Origem típica (ADaM)                                      |
+| ------------ | ---------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| **TRT01P**   | Planned Treatment for Period 1                                                     | **ADSL**                                                  |
+| **TRT01PN**  | Planned Treatment Code (Numeric) for Period 1                                      | **ADSL**                                                  |
+| **TRT01A**   | Actual Treatment for Period 1                                                      | **ADSL**                                                  |
+| **TRT01AN**  | Actual Treatment Code (Numeric) for Period 1                                       | **ADSL**                                                  |
+| **TRT02P**   | Planned Treatment for Period 2                                                     | **ADSL**                                                  |
+| **TRT02PN**  | Planned Treatment Code (Numeric) for Period 2                                      | **ADSL**                                                  |
+| **TRT02A**   | Actual Treatment for Period 2                                                      | **ADSL**                                                  |
+| **TRT02AN**  | Actual Treatment Code (Numeric) for Period 2                                       | **ADSL**                                                  |
+| **AGE**      | Age                                                                                | **ADSL**                                                  |
+| **SEX**      | Sex                                                                                | **ADSL**                                                  |
+| **RACE**     | Race                                                                               | **ADSL**                                                  |
+| **COUNTRY**  | Country                                                                            | **ADSL**                                                  |
+| **ETHNIC**   | Ethnicity                                                                          | **ADSL**                                                  |
+| **VISIT**    | Study Visit                                                                        | **SDTM → utilizado em ADaM longitudinais**                |
+| **VISITNUM** | Study Visit Number                                                                 | **SDTM → utilizado em ADaM longitudinais**                |
+| **SITEID**   | Study Site Identifier                                                              | **ADSL**                                                  |
+| **SUBJID**   | Subject Identifier                                                                 | **ADSL** (derivado do DM)                                 |
+| **ABLFL**    | Baseline Record Flag                                                               | **ADaM longitudinal** (ADLB, ADVS, ADSCDAI, ADHIST, etc.) |
+| **APOBLFL**  | Post-Baseline Analysis Flag *(ou Analysis Post-Baseline Flag, conforme o estudo)*  | **ADaM longitudinal**                                     |
+| **RANDFL**   | Randomized Population Flag                                                         | **ADSL**                                                  |
+| **FASFL**    | Full Analysis Set Flag                                                             | **ADSL**                                                  |
+| **SAFFL**    | Safety Analysis Set Flag                                                           | **ADSL**                                                  |
+| **PASFL**    | Per Protocol Analysis Set Flag *(ou Primary Analysis Set Flag, dependendo do SAP)* | **ADSL**                                                  |
+| **USMFL**    | Usually **Use of Study Medication Flag** *(nome pode variar entre estudos)*        | **ADSL**                                                  |
