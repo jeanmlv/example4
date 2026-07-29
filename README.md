@@ -1,36 +1,13 @@
 # example4
 
-Variable Mapping
-----------------
-Status: Completed (27-Jul-2026)
-Reference: cd_variables_gap_analysis.xlsx
+Hi Jayron, no worries.
 
-Variables of Interest
----------------------
-Total variables evaluated: 136
+Thank you for looking into this.
 
-Coverage Summary
-----------------
-Mapped variables: 89
-Missing variables: 47
-Coverage: 65% (Medium: 50–79%)
+Project name: ARD Explorer
 
-Missing Variables by ADaM Domain
---------------------------------
-ADBDC      : 5
-ADCDAI     : 3
-ADHIST     : 1
-ADIBDQ     : 1
-ADSESCD    : 26
-ADSL       : 2
-ADVSCDAI   : 8
-Not identified : 1
+Workspace: [nome exato do seu workspace]
 
-Next Step
----------
-Review the AdAM Planning Tool dashboard to determine whether the missing variables are:
-• not available in the received ADaM datasets; or
-• not collected for this clinical study.
+The issue occurs when uploading Excel files larger than approximately 100 MB. The application returns an AxiosError (HTTP 413 - Request Entity Too Large). I have already increased the Streamlit upload limit to 500 MB, so I believe the limitation may be in the Domino infrastructure or the reverse proxy.
 
-Status:
-Access to the AdAM Planning Tool dashboard was requested from <Name> via email on 27-Jul-2026. Pending access.
+Please let me know if you need any additional information. Thanks again!
