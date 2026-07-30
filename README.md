@@ -1,13 +1,9 @@
 # example4
 
-Hi Jayron, no worries.
+Hi Pablo, I'm actually not sure about the difference between the arges_clinical_full.csv and arges_clinical_slim.csv files, since I wasn't involved in generating those.
 
-Thank you for looking into this.
+What I created were the ARD files (CSV/XLSX and the PARAMCD dictionary) located under the info/clinical_data folder for each study. The full/slim files are part of a different pipeline, so I'm probably not the best person to explain the differences between them.
 
-Project name: ARD Explorer
+Ou, se quiser direcioná-lo para outra pessoa sem parecer que está "passando o problema":
 
-Workspace: [nome exato do seu workspace]
-
-The issue occurs when uploading Excel files larger than approximately 100 MB. The application returns an AxiosError (HTTP 413 - Request Entity Too Large). I have already increased the Streamlit upload limit to 500 MB, so I believe the limitation may be in the Domino infrastructure or the reverse proxy.
-
-Please let me know if you need any additional information. Thanks again!
+Hi Pablo, I'm actually not sure about the difference between the arges_clinical_full.csv and arges_clinical_slim.csv files, since I didn't generate those. My work was focused on creating the ARD files (CSV/XLSX and the PARAMCD dictionary) that are available under the info/clinical_data folder. Someone from the team responsible for the DSA export pipeline (or Shinobu) would probably know the differences between the full and slim files better than I do.
