@@ -1,7 +1,12 @@
 # example4
 
-I'm actually not sure about the difference between the arges_clinical_full.csv and arges_clinical_slim.csv files, since I didn't generate those.
+Hi Shinobu, here's a concrete example from the ANTHEM-UC study.
 
-What I created were the ARD files (CSV/XLSX and the PARAMCD dictionary) located in the info/clinical_data folder for each study.
+The study is split into three separate folders (WK12, WK28 and WK78), each containing its own ADMAY0 dataset.
 
-I didn't create the files under the info/clinical_data/arges folder. @Fabio Gunderson, do you know who generated those files or what the difference is between the full and slim versions?
+For subject 77242113UC02001-AR100040001 at Week 28 with PARAMCD = ENFSCOR, I found different values across the source datasets:
+
+WK12 ADMAY0: AVAL = 1
+WK78 ADMAY0: AVAL = 2
+
+When these datasets are merged into a single ARD, both records are preserved because they have the same subject/visit/PARAMCD combination, so the ARD currently concatenates them (1 | 2) instead of selecting a single value.
