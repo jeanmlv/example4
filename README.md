@@ -1,19 +1,7 @@
 # example4
 
-Hi Shinobu,
+Thanks, Shinobu. This is very helpful, and thanks for looking into the data and sharing the R script.
 
-The example that Pablo is referring to is from the ANTHEM-UC study. The source dataset is ADMAY0, and the parameter is ENFSCOR.
+Just to make sure I implement the ARD generation correctly, should this be the general rule whenever we merge multiple data transfers? In other words, if the same subject/visit/PARAMCD exists with different values across transfers, should we always keep the value from the latest transfer (e.g., WK78), or should this be evaluated on a study-by-study basis?
 
-The ADaM datasets for this study are split across three separate folders (WK12, WK28, and WK78), each containing its own copy of the ADaM datasets.
-
-ADMAY0.csv is available in both the WK12 and WK78 folders, for example:
-
-/domino/datasets/local/clinical-trial-data/77242113UC02001-ANTHEM-UC-UNBLINDED-WK12/load-2529/Data/_csv
-/domino/datasets/local/clinical-trial-data/77242113UC02001-ANTHEM-UC-UNBLINDED-WK78/load-3134/Data/_csv
-
-For subject 77242113UC02001-AR100040001, at Week 28, with PARAMCD = ENFSCOR, I found different values across the source datasets:
-
-WK12: AVAL = 1
-WK78: AVAL = 2
-
-When these datasets are merged into a single ARD, both records are preserved because they have the same USUBJID / AVISIT / PARAMCD combination. As a result, the ARD currently concatenates the values (1 | 2) instead of selecting a single value.
+I just want to make sure we apply a consistent rule across all studies.
