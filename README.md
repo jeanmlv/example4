@@ -1,11 +1,30 @@
 # example4
 
-Thanks, Shinobu, for confirming this and for looking into the data.
+Hi everyone,
 
-Just to make sure I implement the ARD generation correctly, should this be the general rule whenever we merge multiple data transfers?
+I have prepared the gap analysis spreadsheet for the variables of interest.
 
-In other words, if the same USUBJID/AVISIT/PARAMCD combination exists with different values across transfers, should we always keep the value from the latest transfer or load?
+Columns A–B
 
-For example, in this case we would keep the WK78 value instead of WK12. Similarly, if we have multiple loads of the same study (e.g., load-1899 vs. load-1903), should we always keep the value from the latest load, or should this be evaluated on a study-by-study basis?
+Column A: Variable of interest (requested endpoint/variable)
+Column B: Description of the variable
 
-I just want to make sure we apply a consistent rule across all studies.
+Columns C–E
+
+Column C: Corresponding variable available in the current ARD/ADaM datasets available in Domino (if available)
+Column D: Description of the available variable
+Column E: ADaM source dataset where the variable is currently available
+
+Columns F–H
+
+Availability of each variable across the available ARDs for the study (Y/N).
+
+Column I
+This is the only column that needs to be completed by the Statistical Programmer. For variables marked as unavailable, the goal is to indicate:
+
+whether the information exists but is not included in the currently available ADaM datasets, or
+whether it was not collected for the study.
+
+If the information exists elsewhere, please indicate where it can be found (dataset/source) and, if possible, the expected dataset or source from which it could be obtained.
+
+As Pablo suggested, I propose that we start with ANTHEM and POWER, and once those are completed, we can continue with the remaining studies.
