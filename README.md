@@ -1,3 +1,7 @@
 # example4
 
-I already have the POWER study variable mapping completed. As mentioned in my message to the group yesterday (see below), the corresponding files are already available. Please refer to the files shared in the group, as shown in the image below.
+Hi Basudeb, I checked with Pablo regarding the Domino access. Granting access would require adding you to several components of the project, so it may take a bit longer.
+
+As an alternative, would it work if I shared the original Med.ai S3 paths for the clinical datasets that were imported into Domino? Those are the datasets currently used to generate the ARDs, so this would provide the same source data lineage without requiring Domino project access.
+
+To make it easier to understand how the data flows through Domino, I also prepared a few slides illustrating the overall structure (Med.ai → Domino → ADaM → ARD). The original Med.ai S3 paths are listed on the last slide.
