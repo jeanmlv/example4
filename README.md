@@ -1,11 +1,24 @@
 # example4
 
-| Campo                                                                                               | Sugestão                                                                                                                                                                                                                                   |
-| --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **SCOPE Template**                                                                                  | Internal Data Reuse Request – IMM-Immunology                                                                                                                                                                                               |
-| **Department/Group**                                                                                | Clinical Imaging and Digital Media (ou o grupo oficial do Basudeb, se diferente)                                                                                                                                                           |
-| **Full Protocol number(s)**                                                                         | **77242113UC02001 (ANTHEM UC)**                                                                                                                                                                                                            |
-| **Study Compound(s)**                                                                               | Guselkumab (JNJ-77242113) *(caso este seja o composto do protocolo; confirmar se necessário)*                                                                                                                                              |
-| **Purpose of Research**                                                                             | *To identify and access the clinical datasets imported into Domino for the ANTHEM UC study in order to perform a data lineage assessment and evaluate the availability of variables required for ARD generation and downstream analytics.* |
-| **Are samples being requested?**                                                                    | **No**                                                                                                                                                                                                                                     |
-| **Are any personal images, photos, recordings or audio of the study participants being requested?** | **No** *(a menos que vocês realmente precisem dos dados de imagem/endoscopia; pelo que você descreveu, o objetivo é acessar os datasets clínicos importados no Domino)*                                                                    |
+Hi everyone,
+
+Thank you all for your support with this review.
+
+Please find attached the updated comparison file, which now includes all the studies presented during today's meeting.
+
+The current priority is the ANTHEM and POWER studies.
+
+The objective of this review is to help us identify missing data for our variables of interest. For each variable, we would like to confirm whether it:
+
+was collected or derived,
+is available in the study,
+and, if available, identify the corresponding SDTM/ADaM dataset and source variable where it can be found.
+
+This will help us distinguish between variables that are truly unavailable and those that may exist in another dataset but were not included in the current ADaM import.
+
+Please let me know if you have any questions or need any clarification regarding the spreadsheet.
+
+Thank you very much for your support.
+
+Best regards,
+Jean
