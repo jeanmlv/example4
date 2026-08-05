@@ -1,23 +1,20 @@
 # example4
 
-Hi Brijesh,
+M051: UC/CD Novel Endoscopic Endpoint Development and Deployment
 
-Please find attached the updated comparison file, which includes all the studies presented during today's meeting.
+To train and evaluate AI algorithms for estimation of disease severity in Ulcerative Colitis. Computer vision algorithms will be devised or evaluated, focusing on more precise and informative disease characterization from histology and endoscopy videos.
 
-If you have any questions or if I can provide any additional information to support the review, please don't hesitate to reach out.
+An updated list of variables requested for both the NRI and as-observed datasets includes:
 
-As a reminder, our current priorities are the ANTHEM and POWER studies.
+• Patient identifier
+• Treatment variables
 
-The objective of this review is to help us identify missing data for our variables of interest. For each variable, we would like to confirm whether it:
+At Baseline, Week 12, Week 28 and Week 78 (or corresponding analysis visits), the requested variables include disease activity, endoscopic outcomes, histologic outcomes, clinical outcomes, biomarkers and patient-reported outcomes available in the SDTM and ADaM datasets.
 
-was collected or derived;
-is available in the study; and
-if available, identify the corresponding SDTM or ADaM dataset and source variable where it can be found.
+If available, ICE/NRI rule flags would also be valuable.
 
-This will help us distinguish between variables that are truly unavailable and those that may exist in another dataset but were not included in the current ADaM import.
 
-Thank you very much for your support.
 
-Best regards,
-Jean
+These analyses are in support of the DAS disease modification workstream and can inform additional analyses to support compound differentiation.
 
+SCOPE ID: 2026-494 – Approved – ANTHEM-UC (77242113UCO2001)
