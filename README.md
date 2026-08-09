@@ -1,5 +1,5 @@
 # example4
 
-Following the meeting, Jean had a brief discussion with Raju to walk through how the study data are organized in Domino. During this discussion, it was clarified that the variables listed in the gap analysis correspond to the PARAMCD/PARAM (parameter) values within the ADaM datasets, rather than individual ADaM variables. This reinforces that many of the requested clinical concepts may already exist in the available datasets as parameter records and should be identified through concept mapping instead of assuming the data are missing.
+CRESP represents the standard Clinical Response endpoint, while CRESPP represents the same endpoint calculated using the Primary Estimand Approach, applying the protocol-defined rules for handling intercurrent events (ICEs) and missing data.
 
-Additional clarification: After the meeting, Jean had a brief follow-up discussion with Raju to explain how the study data are organized in Domino. It was clarified that the variables shown in the gap analysis are based on the PARAMCD/PARAM values (parameters) within the ADaM datasets, rather than standalone ADaM variables. Therefore, the focus should be on identifying the corresponding parameter records before concluding that a concept is unavailable.
+The "P" in CRESPP indicates that the Clinical Response endpoint is derived according to the study's Primary Estimand, whereas CRESP is the standard Clinical Response endpoint.
