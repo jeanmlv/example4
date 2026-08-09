@@ -1,5 +1,34 @@
 # example4
 
-CRESP represents the standard Clinical Response endpoint, while CRESPP represents the same endpoint calculated using the Primary Estimand Approach, applying the protocol-defined rules for handling intercurrent events (ICEs) and missing data.
+Overall Status
+🟡 In Progress (42% variable mapping completed)
 
-The "P" in CRESPP indicates that the Clinical Response endpoint is derived according to the study's Primary Estimand, whereas CRESP is the standard Clinical Response endpoint.
+Completed
+• Aug 05 – Presented the Variable Gap Analysis to Brijesh and reviewed the pending variables.
+• Aug 06 – Steven confirmed that Histology data is only available for Week 12 and Week 28. No histology data exists beyond Week 28, therefore those variables were not available in the imported ADaM datasets.
+• Aug 06 – Request sent to Tamsin/Katherine to include the ADHIST source location in the Scope Request for Med.ai ingestion.
+
+Current Activity
+• Waiting for the ADHIST dataset to be uploaded to Med.ai.
+• Fabio will upload the dataset to Domino once it becomes available.
+• A new ARD generation will be performed after the data is available.
+
+Current Blockers
+• Histology source data has not yet been ingested into Med.ai.
+• ARD regeneration depends on the new dataset availability.
+
+Owner(s)
+• Brijesh Ravi
+• Steven Mackness
+• Jayron Soares
+• Fabio
+
+Next Steps
+1. Confirm dataset availability in Med.ai.
+2. Upload data into Domino.
+3. Regenerate the ARD.
+4. Review histology variables.
+5. Update Variable Gap Analysis.
+
+Last Updated
+Aug 09, 2026
