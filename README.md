@@ -1,13 +1,18 @@
 # example4
 
-Overall Status
-🟡 In Progress – Variable Gap Analysis under review.
+Hi Jayron,
 
-Completed
-• Aug 06 – Met with Ting and Raju to present the Variable Gap Analysis and review the variables that still need to be identified and confirmed.
+Thank you for the update.
 
-Current Activity
-• Waiting for feedback regarding the pending variables and confirmation of their availability in the study datasets.
+Adding Fabio to the thread.
 
-Expected Next Step
-• Raju expects to provide an update within approximately one week.
+Hi Fabio,
+
+We now have the latest ANTHEM UC data available (including the updated data cut). Could you please import these datasets into our Domino workspace so we can regenerate the ARDs using the most recent data?
+
+Please let us know once the import is complete, or if you need any additional information from our side.
+
+Thank you!
+
+Best regards,
+Jean
