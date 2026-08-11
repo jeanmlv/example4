@@ -1,72 +1,121 @@
 # example4
 
-library(tidyverse)
+from pathlib import Path
+import pandas as pd
+
 
 # ============================================================
-# CONFIG
+# CONFIGURATION
 # ============================================================
 
-input_file <- "/domino/datasets/local/clinical-trial-data/77242113UC02001-ANTHEM-UC-UNBLINDED-WK78/load-3134/Data/_csv/77242113UC02001_anthem_wk78_ard_merged_20260810_ARD.csv"
+input_folder = Path(
+    r"C:\Users\JMende95\OneDrive - JNJ\Desktop\ard_data\csv"
+)
 
-output_file <- "/mnt/77242113UC02001_anthem_wk78_ard_slim.csv"
+input_file = (
+    input_folder
+    / "77242113UC02001_anthem_wk78_ard_merged_20260810_ARD.csv"
+)
+
+output_folder = input_folder / "slim"
+output_folder.mkdir(exist_ok=True)
+
+output_file = (
+    output_folder
+    / "77242113UC02001_anthem_wk78_ard_merged_20260810_ARD_SLIM.csv"
+)
 
 
 # ============================================================
 # COLUMNS TO KEEP
 # ============================================================
 
-columns_to_keep <- c(
-  "USUBJID",
-  "AVISIT",
-  "AVISITN",
-  "ADHIST_T",
-  "ADHIST_TF",
-  "TRT02PN"
-)
+keys = [
+    "USUBJID",
+    "AVISIT",
+    "AVISITN"
+]
+
+variables_of_interest = [
+    "ADHIST_T",
+    "ADHIST_TF",
+    "TRT02PN",
+    "CRESP",
+    "CRESPP",
+    "CORTBL",
+    "ENFSCOR"
+]
+
+columns_to_keep = keys + variables_of_interest
 
 
 # ============================================================
-# READ DATA
+# VALIDATE INPUT FILE
 # ============================================================
 
-ard <- read_csv(
-  input_file,
-  show_col_types = FALSE
+if not input_file.exists():
+    raise FileNotFoundError(
+        f"CSV file not found:\n{input_file}"
+    )
+
+print(f"Processing: {input_file.name}")
+
+
+# ============================================================
+# READ CSV
+# ============================================================
+
+df = pd.read_csv(
+    input_file,
+    low_memory=False
 )
+
+print(f"Original rows: {len(df):,}")
+print(f"Original columns: {len(df.columns):,}")
 
 
 # ============================================================
 # CHECK COLUMNS
 # ============================================================
 
-missing_columns <- setdiff(columns_to_keep, names(ard))
+available_columns = [
+    col for col in columns_to_keep
+    if col in df.columns
+]
 
-if (length(missing_columns) > 0) {
-  
-  warning(
-    paste(
-      "The following columns were not found:",
-      paste(missing_columns, collapse = ", ")
-    )
-  )
-}
+missing_columns = [
+    col for col in columns_to_keep
+    if col not in df.columns
+]
+
+
+print("\nAvailable requested columns:")
+for col in available_columns:
+    print(f"  ✔ {col}")
+
+
+if missing_columns:
+    print("\nRequested columns NOT FOUND:")
+    
+    for col in missing_columns:
+        print(f"  ✘ {col}")
 
 
 # ============================================================
 # CREATE SLIM ARD
 # ============================================================
 
-ard_slim <- ard %>%
-  select(any_of(columns_to_keep))
+df_slim = df[available_columns].copy()
 
 
 # ============================================================
 # EXPORT
 # ============================================================
 
-write_csv(
-  ard_slim,
-  output_file
+df_slim.to_csv(
+    output_file,
+    index=False,
+    encoding="utf-8-sig"
 )
 
 
@@ -74,8 +123,17 @@ write_csv(
 # SUMMARY
 # ============================================================
 
-cat("\nSlim ARD created successfully!\n")
-cat("Original columns:", ncol(ard), "\n")
-cat("Slim columns:", ncol(ard_slim), "\n")
-cat("Rows:", nrow(ard_slim), "\n")
-cat("Output:", output_file, "\n")
+print("\n========================================")
+print("SLIM ARD CREATED SUCCESSFULLY")
+print("========================================")
+
+print(f"Rows: {len(df_slim):,}")
+print(f"Columns: {len(df_slim.columns)}")
+
+print(f"\nOutput file:\n{output_file}")
+
+if missing_columns:
+    print(
+        f"\nWarning: {len(missing_columns)} "
+        "requested variable(s) were not found."
+    )
