@@ -1,7 +1,81 @@
 # example4
 
-Just to provide a quick update on ANTHEM and POWER:
+library(tidyverse)
 
-ANTHEM: We had a good improvement in data coverage after the histology data update. I re-ran the pending variable analysis with the updated data, and the coverage improved significantly, as mentioned in my email yesterday. At this point, I’m just waiting for the team’s feedback on the few variables that are still pending.
+# ============================================================
+# CONFIG
+# ============================================================
 
-POWER: Ting replied today regarding some challenges in identifying the remaining pending data. She mentioned that Raju is currently reviewing the available information using the ADaM metadata and CRF. I’ve already replied and also reached out to Raju to offer my support, so we can work together to identify the remaining variables based on the available data.
+input_file <- "/domino/datasets/local/clinical-trial-data/77242113UC02001-ANTHEM-UC-UNBLINDED-WK78/load-3134/Data/_csv/77242113UC02001_anthem_wk78_ard_merged_20260810_ARD.csv"
+
+output_file <- "/mnt/77242113UC02001_anthem_wk78_ard_slim.csv"
+
+
+# ============================================================
+# COLUMNS TO KEEP
+# ============================================================
+
+columns_to_keep <- c(
+  "USUBJID",
+  "AVISIT",
+  "AVISITN",
+  "ADHIST_T",
+  "ADHIST_TF",
+  "TRT02PN"
+)
+
+
+# ============================================================
+# READ DATA
+# ============================================================
+
+ard <- read_csv(
+  input_file,
+  show_col_types = FALSE
+)
+
+
+# ============================================================
+# CHECK COLUMNS
+# ============================================================
+
+missing_columns <- setdiff(columns_to_keep, names(ard))
+
+if (length(missing_columns) > 0) {
+  
+  warning(
+    paste(
+      "The following columns were not found:",
+      paste(missing_columns, collapse = ", ")
+    )
+  )
+}
+
+
+# ============================================================
+# CREATE SLIM ARD
+# ============================================================
+
+ard_slim <- ard %>%
+  select(any_of(columns_to_keep))
+
+
+# ============================================================
+# EXPORT
+# ============================================================
+
+write_csv(
+  ard_slim,
+  output_file
+)
+
+
+# ============================================================
+# SUMMARY
+# ============================================================
+
+cat("\nSlim ARD created successfully!\n")
+cat("Original columns:", ncol(ard), "\n")
+cat("Slim columns:", ncol(ard_slim), "\n")
+cat("Rows:", nrow(ard_slim), "\n")
+cat("Output:", output_file, "\n")
