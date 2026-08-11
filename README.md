@@ -1,22 +1,14 @@
 # example4
 
-Dear team,
+Hi Ting,
 
-Following the upload of the recent ADHIST data for ANTHEM UC, I reviewed and updated the variable gap analysis. Please find the updated file attached.
+Thank you for the clarification and for the support.
 
-The additional data helped improve the coverage of our variables of interest. However, there are still some variables that I was not able to identify in the ADaM datasets currently available to us through Week 78 (WK78).
+I am also in contact with Raju and will continue working with him to support the understanding and mapping of the requested variables against the available data. Hopefully, this will help us identify the corresponding information and data sources for the variables that are still pending.
 
-In the attached spreadsheet, these variables are marked as “Not Available” and highlighted for further review.
+The ADaM metadata and CRF would also be very helpful for this assessment.
 
-Could you please review the remaining gaps and, where applicable, help us confirm:
-
-Whether the variable is available in another ADaM dataset that has not yet been provided/imported;
-The corresponding dataset and variable/parameter where the information can be found; or
-Whether the variable was not collected or derived for the ANTHEM UC study.
-
-This information will help us distinguish between variables that are truly unavailable for the study and those that may simply be missing from the datasets currently available to us.
-
-Thank you in advance for your support. Please let me know if any additional information or clarification is needed.
+Thank you again for your support.
 
 Best regards,
 Jean
