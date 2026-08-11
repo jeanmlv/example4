@@ -1,14 +1,3 @@
 # example4
 
-Hi Ting,
-
-Thank you for the clarification and for the support.
-
-I am also in contact with Raju and will continue working with him to support the understanding and mapping of the requested variables against the available data. Hopefully, this will help us identify the corresponding information and data sources for the variables that are still pending.
-
-The ADaM metadata and CRF would also be very helpful for this assessment.
-
-Thank you again for your support.
-
-Best regards,
-Jean
+When would be a good day for you this week to have a quick call about the POWER study? I’d like to review the remaining pending variables with you and see if we can identify them based on the data I currently have available in Domino.
