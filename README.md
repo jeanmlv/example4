@@ -1,18 +1,22 @@
 # example4
 
-Hi Jayron,
+Dear team,
 
-Thank you for the update.
+Following the upload of the recent ADHIST data for ANTHEM UC, I reviewed and updated the variable gap analysis. Please find the updated file attached.
 
-Adding Fabio to the thread.
+The additional data helped improve the coverage of our variables of interest. However, there are still some variables that I was not able to identify in the ADaM datasets currently available to us through Week 78 (WK78).
 
-Hi Fabio,
+In the attached spreadsheet, these variables are marked as “Not Available” and highlighted for further review.
 
-We now have the latest ANTHEM UC data available (including the updated data cut). Could you please import these datasets into our Domino workspace so we can regenerate the ARDs using the most recent data?
+Could you please review the remaining gaps and, where applicable, help us confirm:
 
-Please let us know once the import is complete, or if you need any additional information from our side.
+Whether the variable is available in another ADaM dataset that has not yet been provided/imported;
+The corresponding dataset and variable/parameter where the information can be found; or
+Whether the variable was not collected or derived for the ANTHEM UC study.
 
-Thank you!
+This information will help us distinguish between variables that are truly unavailable for the study and those that may simply be missing from the datasets currently available to us.
+
+Thank you in advance for your support. Please let me know if any additional information or clarification is needed.
 
 Best regards,
 Jean
