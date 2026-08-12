@@ -1,9 +1,19 @@
 # example4
 
-Hi Pablo, just a quick update on the tasks we discussed:
+Overall Status
+◉ In Progress (81% variable mapping completed) – WK12, WK28, WK78
 
-1. Variable Gap Analysis: I’ve updated the vsquad_ibd_data_inventory file with the variable gap analysis for all 23 trials reviewed.
+Completed
+• Aug 05 – Presented the Variable Gap Analysis to Brijesh and reviewed the pending variables.
+• Aug 06 – Steven confirmed that histology data is maintained in separate DBR analysis areas in SPACE for the Week 12 and Week 28 database locks. No histology data exists beyond Week 28.
+• Aug 06 – Requested ADHIST ingestion in Med.ai.
+• Aug 07 – Lourdes coordinated the clinical data ingestion with Jayron.
+• Aug 07 – Jayron confirmed that the updated clinical datasets were uploaded to Med.ai.
+• Aug 10 – Fabio uploaded/synced the updated histology data into Domino.
+• Aug 11 – Re-ran the Variable Gap Analysis using the updated histology data, resulting in improved variable coverage (81% mapped).
+• Aug 11 – Pablo confirmed that UCEIS was not collected for this trial; related variables were updated to “Not Collected for this Trial.”
+• Aug 11 – Generated the updated full ARD and slim ARD, including the corresponding PARAMCD dictionary, and made them available in Thea.View.
+• Aug 12 – Steven confirmed that no histology data is available beyond Week 28.
 
-2. Slim ARDs: I’ve started generating the slim ARD versions containing only our variables of interest. I started with ANTHEM-UC, since we recently received the updated histology data from the study team and I was able to re-run the analysis with the latest available data.
-
-The ANTHEM-UC slim ARD and its corresponding PARAMCD dictionary are now available in the info/clinical_data folder, alongside the full ARD version.
+Current Activity
+• Awaiting final feedback/confirmation from the study team on the remaining unresolved variables.
