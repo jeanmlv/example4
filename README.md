@@ -4,18 +4,21 @@ Hi Shuixin,
 
 I hope you’re doing well.
 
-My name is Jean, and I’m currently working with Pablo’s team on the analysis of IBD clinical studies. One of our current activities is to map our variables of interest against the available ADaM datasets and investigate the variables that could not be identified, with support from the study PLs.
+I’m currently reviewing the GRAVITI study and have completed the initial mapping of our variables of interest against the ADaM datasets available to us. As part of this review, there are still some variables for which I was unable to identify the corresponding data source.
 
-I’m currently reviewing the **GRAVITI study**, and I understand that you are the PL for this study. I have already completed the initial mapping using the ADaM datasets available to us, but there are still some variables that I could not identify.
+Please find attached the current variable gap analysis. Columns A and B contain the variables of interest and their descriptions, while columns C, D, and E contain the corresponding variables, descriptions, and ADaM sources identified during the initial mapping.
 
-I’ve attached the Excel file with the current gap analysis. **Columns A and B** contain our variables of interest, while **columns C, D, and E** show the corresponding variables and ADaM sources that I was able to identify.
+At this stage, we would appreciate your support in reviewing the variables marked as **“Not Available”** and confirming whether they:
 
-At this stage, we would appreciate your support in reviewing the variables currently marked as **“Not Available”** and determining whether they may be available elsewhere (for example, in another ADaM/SDTM dataset) or were not collected/derived for the GRAVITI study.
+* are available in another ADaM or SDTM dataset;
+* were collected or derived for the GRAVITI study but are not included in the datasets currently available to us; or
+* were not collected/derived as part of the study.
 
-Would you be able to help us review these remaining variables? If helpful, we can also schedule a quick call and I can walk you through the analysis.
+Any information regarding the corresponding dataset and source variable, where applicable, would also be very helpful.
 
-Thank you in advance for your support.
+Thank you in advance for your support. Please let me know if you have any questions regarding the attached analysis.
 
 Best regards,
 Jean
+
 
