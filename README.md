@@ -1,15 +1,9 @@
 # example4
 
-Overall Status
-◉ In Progress (31% variable mapping completed) – WK36
+Hi Shuixin, good morning! Nice to meet you.
 
-Completed
-• Aug 06 – Met with Ting and Raju to present the Variable Gap Analysis and review the pending variables.
-• Aug 11 – Ting confirmed that all currently available ADaM datasets have been provided. The remaining activity is to identify/map the requested variables within the existing data.
-• Aug 11 – Ting confirmed that Raju is reviewing the ADaM metadata and CRF to investigate the remaining variables.
-• Aug 11 – Contacted Raju and offered support to review the pending variables against the data currently available in Domino.
-• Aug 12 – Follow-up meeting with Raju scheduled for Aug 14 to jointly review the remaining variables and identify potential data sources.
+My name is Jean, and I’m currently working with the team on a Variable Gap Analysis across our IBD clinical studies. The objective is to review a defined list of variables of interest against the available ADaM data and identify which variables are available, which may exist under different parameters/datasets, and which were not collected for the study.
 
-Current Activity
-• Raju is reviewing the ADaM metadata and CRF for the remaining variables.
-• Joint review with Raju scheduled for Aug 14 to map the pending variables against the available Domino data and identify their corresponding sources.
+I’m currently reviewing the GRAVITI study, and I understand that you are the PL for this study. I’ve already completed an initial mapping using the ADaM datasets available to us, but there are still some variables that I could not identify.
+
+Would you be able to help me review these remaining variables and confirm whether they are available elsewhere or were not collected for GRAVITI? I can share the gap analysis with you and walk you through what I’ve identified so far.
