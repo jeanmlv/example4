@@ -1,7 +1,3 @@
 # example4
 
-• Aug 14 – Both observed/raw results and parameters using the primary ICE approach were included and identified in the updated mapping.
-• Aug 14 – Parameter names and codes in columns C and D were corrected to align with the actual QUASAR parameters.
-• Aug 14 – Additional baseline corticosteroid variables were included, and EOS-related grading information was added to the mapping.
-
-
+Mapping rule: When a variable of interest is defined as Primary or Alternative Approach, prioritize mapping the corresponding Observed variable in the ARD, when available. If no corresponding Observed variable is found, flag it as not available / not found rather than replacing it with another approach. If both the Observed and Alternative/Primary versions are explicitly included in the variables-of-interest list, map each one separately using its corresponding statistical approach.
