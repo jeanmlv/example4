@@ -1,14 +1,24 @@
 # example4
 
-Hi Tamsin,
+Hi Steve,
 
-Thank you very much for the guidance. I was able to use Scope and identify the portfolio leads/owners for most of the studies.
+Thank you for confirming that there is no additional Histology data beyond the Week 28 RE.
 
-However, there are still a few studies for which I could not find the corresponding owner in Scope. I have highlighted these studies in red in the attached spreadsheet.
+Following up on the ANTHEM variable gap analysis, we have made significant progress and now have only **7 variables remaining as not available** in the current ADaM/ARD data:
 
-Would you know if there is another source or approach I could use to identify the owners for these remaining studies?
+* HEHL – Histo-Endo Mucosal Heal
+* HIHL – Histo Healing
+* ENHLP – Endoscopic Healing (Primary Estimand Approach)
+* CORTBL – Induction Baseline Corticosteroid Use
+* HEHLP – Histo-Endo Mucosal Heal (Primary Estimand Approach)
+* ENNRMP – Endoscopic Normalization (Primary Estimand Approach)
+* NANCYHI – Nancy Histological Index
 
-Thank you again for your help!
+For these remaining variables, would you be able to help us confirm whether they were collected/derived for ANTHEM and, if so, where we could find them (e.g., in another ADaM dataset or source)?
+
+This would help us close the remaining gaps and finalize the ANTHEM variable mapping.
+
+Thank you again for your support.
 
 Best regards,
 Jean
