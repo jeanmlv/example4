@@ -1,9 +1,5 @@
 # example4
 
-“For the AI model, I think we should prioritize the observed approach whenever it is available, because it is closer to the actual clinical data observed for the patient and has less influence from study-specific statistical rules.
+Hi Raju, just to confirm regarding the STARDUST study: I noticed that both you and Ting Zhang are listed in the Scope. Are you also the person supporting the variable review/mapping for STARDUST, or should I coordinate with Ting for this study?
 
-The primary or alternative approaches may incorporate additional rules for handling missing data, intercurrent events, or non-responder assumptions. If we use those as the default, the model could potentially learn study-specific statistical assumptions rather than the underlying clinical information.
-
-So my suggestion is to use Observed as the preferred source. If the observed version is not available, we can use the Primary or Alternative approach as a fallback, but we should flag it clearly so we maintain the data provenance.
-
-The exception would be when both Observed and Primary/Alternative are explicitly included in our variables-of-interest list. In that case, I would keep and map both separately.”
+Hi Raju, just a quick check — I noticed that both you and Ting Zhang are listed for STARDUST in the Scope. Will you also be supporting the variable review for STARDUST, or should I reach out to Ting?
