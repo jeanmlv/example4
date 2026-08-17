@@ -1,5 +1,14 @@
 # example4
 
-Hi Raju, just to confirm regarding the STARDUST study: I noticed that both you and Ting Zhang are listed in the Scope. Are you also the person supporting the variable review/mapping for STARDUST, or should I coordinate with Ting for this study?
+Hi Tamsin,
 
-Hi Raju, just a quick check — I noticed that both you and Ting Zhang are listed for STARDUST in the Scope. Will you also be supporting the variable review for STARDUST, or should I reach out to Ting?
+Thank you very much for the guidance. I was able to use Scope and identify the portfolio leads/owners for most of the studies.
+
+However, there are still a few studies for which I could not find the corresponding owner in Scope. I have highlighted these studies in red in the attached spreadsheet.
+
+Would you know if there is another source or approach I could use to identify the owners for these remaining studies?
+
+Thank you again for your help!
+
+Best regards,
+Jean
