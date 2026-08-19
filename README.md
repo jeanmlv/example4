@@ -1,17 +1,4 @@
 # example4
 
-Hi Shuixin,
-
-Thank you for sharing the define.pdf.
-
-I reviewed the file and compared it with our current GRAVITI variable gap analysis. I noticed that the define.pdf provided appears to cover mainly the ADALTEFF dataset, while we have already identified several variables available in other ADaM datasets for this study.
-
-Would there be a more comprehensive or updated version of the Define-XML/define.pdf that includes the other available ADaM datasets as well? If so, it would be very helpful for us to perform a more complete review of the remaining variable gaps.
-
-Additionally, would an annotated CRF (aCRF) be available for this study? Access to the aCRF could help us investigate variables that are not available in ADaM and determine whether the underlying information was originally collected and may be available from an upstream source.
-
-Thank you again for your support.
-
-Best regards,
-Jean
+Yes, overall the review is progressing well. Some PLs provide more information and easier access to the data than others, so in some cases I need a few more follow-ups. But ANTHEM is already closed, I’m currently reviewing GRAVITI, and Raju has also provided a lot of useful information for POWER. So we’re making good progress overall.
 
