@@ -1,15 +1,16 @@
 # example4
 
 """
-Merge selected ARD Excel files from the same clinical study.
+Safely merge selected ARD Excel files from the same clinical study.
 
-The script:
-1. merges the union of rows and columns from the selected ARDs;
-2. fills empty cells with available values;
-3. preserves different populated values using " | ";
-4. consolidates repeated complete ARD keys inside each source file;
-5. keeps rows with incomplete keys separate to avoid an unsafe merge;
-6. consolidates PARAMCD_DICT and creates merge/QC reports.
+Main safety rule
+----------------
+Values are merged ONLY when the complete clinical key matches exactly:
+USUBJID + AVISIT + AVISITN + AVISIT_ORDER.
+
+Rows with incomplete keys are never matched across files.
+The script also validates that the final merge did not create a populated
+variable at an AVISIT where that variable was never populated in any source.
 
 Dependencies
 ------------
@@ -53,6 +54,7 @@ DEFAULT_KEYS = [
 ]
 
 VALUE_SEPARATOR = " | "
+STRICT_VISIT_QC = True
 
 
 # ==========================================================
@@ -60,26 +62,7 @@ VALUE_SEPARATOR = " | "
 # ==========================================================
 
 INTERNAL_ROW_KEY = "__ARD_MERGE_INTERNAL_ROW_KEY__"
-
-CONFLICT_COLUMNS = [
-    *DEFAULT_KEYS,
-    "CONFLICT_STAGE",
-    "COLUMN",
-    "ACCUMULATED_FILES",
-    "ACCUMULATED_VALUE",
-    "INCOMING_FILE",
-    "INCOMING_VALUE",
-    "MERGED_VALUE",
-]
-
-DUPLICATE_REPORT_COLUMNS = [
-    "FILE",
-    *DEFAULT_KEYS,
-    "ROW_COUNT",
-    "KEY_STATUS",
-    "ACTION",
-    "CONFLICT_COLUMNS",
-]
+INCOMING_SUFFIX = "__INCOMING__"
 
 
 # ==========================================================
@@ -104,7 +87,7 @@ def is_missing(value: Any) -> bool:
 
 
 def display_value(value: Any) -> str:
-    """Convert a value to a stable text representation for reports."""
+    """Convert a value to a stable text representation."""
     if is_missing(value):
         return ""
 
@@ -117,10 +100,9 @@ def display_value(value: Any) -> str:
 
 
 def values_equal(left: Any, right: Any) -> bool:
-    """Compare ARD cell values while treating 1 and 1.0 as equal."""
+    """Compare values while treating numeric 1 and 1.0 as equal."""
     if is_missing(left) and is_missing(right):
         return True
-
     if is_missing(left) or is_missing(right):
         return False
 
@@ -135,893 +117,570 @@ def values_equal(left: Any, right: Any) -> bool:
     return display_value(left) == display_value(right)
 
 
-def split_unique_values(
-    value: Any,
-    separator: str = VALUE_SEPARATOR,
-) -> list[str]:
-    """Return the unique alternatives already stored in an ARD cell."""
+def split_unique_values(value: Any, separator: str = VALUE_SEPARATOR) -> list[str]:
+    """Split an already combined cell and return unique alternatives."""
     if is_missing(value):
         return []
 
-    text = display_value(value)
-    unique_values: list[str] = []
-
-    for item in text.split(separator):
+    result: list[str] = []
+    for item in display_value(value).split(separator):
         item = item.strip()
-        if item and item not in unique_values:
-            unique_values.append(item)
+        if item and item not in result:
+            result.append(item)
+    return result
 
-    return unique_values
 
-
-def merge_cell_values(
-    left: Any,
-    right: Any,
-    separator: str = VALUE_SEPARATOR,
-) -> Any:
-    """
-    Merge two cell values without discarding information.
-
-    Equal values are retained once. Different populated values are converted
-    to text and combined with the configured separator.
-    """
+def merge_cell_values(left: Any, right: Any, separator: str = VALUE_SEPARATOR) -> Any:
+    """Keep equal values once; otherwise preserve both using the separator."""
     if is_missing(left):
         return right
-
     if is_missing(right):
         return left
-
     if values_equal(left, right):
         return left
 
-    merged_values: list[str] = []
+    values: list[str] = []
+    for item in split_unique_values(left, separator) + split_unique_values(right, separator):
+        if item not in values:
+            values.append(item)
 
-    for value in (
-        split_unique_values(left, separator)
-        + split_unique_values(right, separator)
-    ):
-        if value not in merged_values:
-            merged_values.append(value)
-
-    return separator.join(merged_values)
+    return separator.join(values)
 
 
-def merge_series_values(
-    series: pd.Series,
-    separator: str = VALUE_SEPARATOR,
-) -> Any:
-    """Consolidate all nonmissing values from one duplicated-key column."""
-    merged_value: Any = None
-
+def merge_series_values(series: pd.Series) -> Any:
+    """Merge all values in one column from a duplicated-key group."""
+    result: Any = None
     for value in series:
-        merged_value = merge_cell_values(
-            merged_value,
-            value,
-            separator,
-        )
-
-    return merged_value
+        result = merge_cell_values(result, value)
+    return result
 
 
-def has_missing_key(
-    df: pd.DataFrame,
-    keys: list[str],
-) -> pd.Series:
-    """Return a mask identifying rows with at least one incomplete key."""
-    return df[keys].map(is_missing).any(axis=1)
-
-
-# ==========================================================
-# Validation and within-file consolidation
-# ==========================================================
-
-def validate_required_keys(
-    df: pd.DataFrame,
-    keys: list[str],
-    filename: str,
-) -> None:
-    """Validate that all required ARD key columns are available."""
-    missing_keys = [key for key in keys if key not in df.columns]
-
-    if missing_keys:
-        raise ValueError(
-            f"{filename}: missing required key columns: {missing_keys}"
-        )
-
-    if INTERNAL_ROW_KEY in df.columns:
-        raise ValueError(
-            f"{filename}: reserved internal column already exists: "
-            f"{INTERNAL_ROW_KEY}"
-        )
-
-
-def find_conflicting_columns(
-    group: pd.DataFrame,
-    keys: list[str],
-    separator: str,
-) -> list[str]:
-    """List non-key columns containing more than one distinct value."""
-    conflicts: list[str] = []
-
-    for column in group.columns:
-        if column in keys:
-            continue
-
-        merged_value: Any = None
-        observed_alternatives: list[str] = []
-
-        for value in group[column]:
-            if is_missing(value):
-                continue
-
-            merged_value = merge_cell_values(
-                merged_value,
-                value,
-                separator,
-            )
-
-            for alternative in split_unique_values(value, separator):
-                if alternative not in observed_alternatives:
-                    observed_alternatives.append(alternative)
-
-        if len(observed_alternatives) > 1:
-            conflicts.append(column)
-
-    return conflicts
-
-
-def build_within_file_conflicts(
-    duplicated_rows: pd.DataFrame,
-    keys: list[str],
-    filename: str,
-    separator: str,
-) -> list[dict[str, Any]]:
-    """Create conflict records for repeated complete keys in one file."""
-    records: list[dict[str, Any]] = []
-
-    if duplicated_rows.empty:
-        return records
-
-    grouped = duplicated_rows.groupby(
-        keys,
-        dropna=False,
-        sort=False,
+def missing_key_mask(df: pd.DataFrame, keys: list[str]) -> pd.Series:
+    """Rows with at least one missing key component."""
+    return df[keys].apply(
+        lambda row: any(is_missing(value) for value in row),
+        axis=1,
     )
 
-    for group_key, group in grouped:
-        if not isinstance(group_key, tuple):
-            group_key = (group_key,)
 
-        for column in group.columns:
-            if column in keys:
-                continue
+# ==========================================================
+# Input validation / within-file duplicate consolidation
+# ==========================================================
 
-            alternatives: list[str] = []
-            merged_value: Any = None
+def validate_required_keys(df: pd.DataFrame, keys: list[str], filename: str) -> None:
+    missing = [key for key in keys if key not in df.columns]
+    if missing:
+        raise ValueError(f"{filename}: missing required key columns: {missing}")
 
-            for value in group[column]:
-                if is_missing(value):
-                    continue
-
-                merged_value = merge_cell_values(
-                    merged_value,
-                    value,
-                    separator,
-                )
-
-                for alternative in split_unique_values(value, separator):
-                    if alternative not in alternatives:
-                        alternatives.append(alternative)
-
-            if len(alternatives) <= 1:
-                continue
-
-            record = {
-                key: value
-                for key, value in zip(keys, group_key)
-            }
-            record.update(
-                {
-                    "CONFLICT_STAGE": "WITHIN_FILE_DUPLICATE",
-                    "COLUMN": column,
-                    "ACCUMULATED_FILES": filename,
-                    "ACCUMULATED_VALUE": alternatives[0],
-                    "INCOMING_FILE": filename,
-                    "INCOMING_VALUE": separator.join(alternatives[1:]),
-                    "MERGED_VALUE": display_value(merged_value),
-                }
-            )
-            records.append(record)
-
-    return records
+    reserved = [
+        column for column in df.columns
+        if column == INTERNAL_ROW_KEY or column.endswith(INCOMING_SUFFIX)
+    ]
+    if reserved:
+        raise ValueError(
+            f"{filename}: reserved merge column name(s) found: {reserved}"
+        )
 
 
-def consolidate_duplicate_keys(
+def consolidate_duplicate_complete_keys(
     df: pd.DataFrame,
     keys: list[str],
     filename: str,
-    separator: str = VALUE_SEPARATOR,
-) -> tuple[
-    pd.DataFrame,
-    pd.DataFrame,
-    list[dict[str, Any]],
-    dict[str, int],
-]:
+) -> tuple[pd.DataFrame, pd.DataFrame, list[dict[str, Any]], dict[str, int]]:
     """
-    Consolidate repeated complete keys inside one ARD.
+    Consolidate duplicate COMPLETE keys inside one source file.
 
-    Rows with incomplete keys are deliberately kept separate. Without a
-    complete key, combining them could merge unrelated clinical observations.
+    Incomplete-key rows are preserved separately and never merged with each
+    other or with rows from another source file.
     """
     working = df.copy().astype(object)
-    incomplete_mask = has_missing_key(working, keys)
+    incomplete_mask = missing_key_mask(working, keys)
 
     complete = working.loc[~incomplete_mask].copy()
     incomplete = working.loc[incomplete_mask].copy()
 
-    complete_duplicate_mask = complete.duplicated(keys, keep=False)
-    duplicated_complete_rows = complete.loc[complete_duplicate_mask].copy()
+    duplicate_mask = complete.duplicated(keys, keep=False)
+    duplicate_rows = complete.loc[duplicate_mask].copy()
+    unique_rows = complete.loc[~duplicate_mask].copy()
 
-    duplicate_records: list[dict[str, Any]] = []
+    duplicate_report_records: list[dict[str, Any]] = []
+    conflict_records: list[dict[str, Any]] = []
 
-    if not duplicated_complete_rows.empty:
-        for group_key, group in duplicated_complete_rows.groupby(
-            keys,
-            dropna=False,
-            sort=False,
-        ):
+    if not duplicate_rows.empty:
+        grouped = duplicate_rows.groupby(keys, dropna=False, sort=False)
+
+        for group_key, group in grouped:
             if not isinstance(group_key, tuple):
                 group_key = (group_key,)
 
-            conflicting_columns = find_conflicting_columns(
-                group,
-                keys,
-                separator,
+            conflict_columns: list[str] = []
+
+            for column in group.columns:
+                if column in keys:
+                    continue
+
+                alternatives: list[str] = []
+                for value in group[column]:
+                    if is_missing(value):
+                        continue
+                    for alternative in split_unique_values(value):
+                        if alternative not in alternatives:
+                            alternatives.append(alternative)
+
+                if len(alternatives) > 1:
+                    conflict_columns.append(column)
+                    record = {key: value for key, value in zip(keys, group_key)}
+                    record.update(
+                        {
+                            "CONFLICT_STAGE": "WITHIN_FILE_DUPLICATE",
+                            "COLUMN": column,
+                            "ACCUMULATED_FILES": filename,
+                            "ACCUMULATED_VALUE": alternatives[0],
+                            "INCOMING_FILE": filename,
+                            "INCOMING_VALUE": VALUE_SEPARATOR.join(alternatives[1:]),
+                            "MERGED_VALUE": VALUE_SEPARATOR.join(alternatives),
+                        }
+                    )
+                    conflict_records.append(record)
+
+            duplicate_report_records.append(
+                {
+                    "FILE": filename,
+                    **{key: value for key, value in zip(keys, group_key)},
+                    "ROW_COUNT": len(group),
+                    "KEY_STATUS": "COMPLETE",
+                    "ACTION": "CONSOLIDATED",
+                    "CONFLICT_COLUMNS": VALUE_SEPARATOR.join(conflict_columns),
+                }
             )
 
-            record = {
-                "FILE": filename,
-                **{
-                    key: value
-                    for key, value in zip(keys, group_key)
-                },
-                "ROW_COUNT": len(group),
-                "KEY_STATUS": "COMPLETE",
-                "ACTION": "CONSOLIDATED",
-                "CONFLICT_COLUMNS": separator.join(conflicting_columns),
-            }
-            duplicate_records.append(record)
-
-    incomplete_duplicate_mask = incomplete.duplicated(
-        keys,
-        keep=False,
-    )
-    duplicated_incomplete_rows = incomplete.loc[
-        incomplete_duplicate_mask
-    ].copy()
-
-    if not duplicated_incomplete_rows.empty:
-        for group_key, group in duplicated_incomplete_rows.groupby(
-            keys,
-            dropna=False,
-            sort=False,
-        ):
-            if not isinstance(group_key, tuple):
-                group_key = (group_key,)
-
-            record = {
-                "FILE": filename,
-                **{
-                    key: value
-                    for key, value in zip(keys, group_key)
-                },
-                "ROW_COUNT": len(group),
-                "KEY_STATUS": "INCOMPLETE",
-                "ACTION": "KEPT_SEPARATE",
-                "CONFLICT_COLUMNS": "",
-            }
-            duplicate_records.append(record)
-
-    value_columns = [
-        column
-        for column in working.columns
-        if column not in keys
-    ]
-
-    unique_complete = complete.loc[
-        ~complete_duplicate_mask
-    ].copy()
-
-    if not duplicated_complete_rows.empty:
-        aggregation_rules = {
-            column: (
-                lambda series, sep=separator: merge_series_values(series, sep)
-            )
-            for column in value_columns
-        }
+        value_columns = [column for column in working.columns if column not in keys]
+        rules = {column: merge_series_values for column in value_columns}
 
         consolidated_duplicates = (
-            duplicated_complete_rows.groupby(
-                keys,
-                dropna=False,
-                sort=False,
-                as_index=False,
-            )
-            .agg(aggregation_rules)
+            duplicate_rows.groupby(keys, dropna=False, sort=False, as_index=False)
+            .agg(rules)
         )
 
-        if unique_complete.empty:
-            consolidated_complete = consolidated_duplicates
-        else:
-            consolidated_complete = pd.concat(
-                [unique_complete, consolidated_duplicates],
-                ignore_index=True,
-                sort=False,
-            )
-    else:
-        consolidated_complete = complete.copy()
-
-    if consolidated_complete.empty:
-        consolidated = incomplete.copy()
-    elif incomplete.empty:
-        consolidated = consolidated_complete.copy()
-    else:
-        consolidated = pd.concat(
-            [consolidated_complete, incomplete],
+        complete = pd.concat(
+            [unique_rows, consolidated_duplicates],
             ignore_index=True,
             sort=False,
         )
-    consolidated = consolidated.reindex(columns=working.columns)
-    consolidated = consolidated.astype(object)
 
-    conflicts = build_within_file_conflicts(
-        duplicated_complete_rows,
-        keys,
-        filename,
-        separator,
-    )
+    # Incomplete keys are intentionally NOT consolidated.
+    if incomplete.empty:
+        consolidated = complete
+    elif complete.empty:
+        consolidated = incomplete
+    else:
+        consolidated = pd.concat([complete, incomplete], ignore_index=True, sort=False)
 
-    duplicate_report = pd.DataFrame(
-        duplicate_records,
-        columns=[
-            "FILE",
-            *keys,
-            "ROW_COUNT",
-            "KEY_STATUS",
-            "ACTION",
-            "CONFLICT_COLUMNS",
-        ],
-    )
+    consolidated = consolidated.reindex(columns=working.columns).astype(object)
 
-    statistics = {
+    duplicate_report = pd.DataFrame(duplicate_report_records)
+
+    stats = {
         "INPUT_ROWS": len(working),
         "NULL_KEY_ROWS": int(incomplete_mask.sum()),
-        "DUPLICATE_COMPLETE_KEY_ROWS": int(
-            complete_duplicate_mask.sum()
-        ),
+        "DUPLICATE_COMPLETE_KEY_ROWS": int(duplicate_mask.sum()),
         "DUPLICATE_COMPLETE_KEY_GROUPS": int(
-            len(
-                duplicated_complete_rows[keys].drop_duplicates()
-            )
+            duplicate_rows[keys].drop_duplicates().shape[0]
         ),
         "ROWS_AFTER_INTERNAL_CONSOLIDATION": len(consolidated),
     }
 
-    return consolidated, duplicate_report, conflicts, statistics
+    return consolidated, duplicate_report, conflict_records, stats
 
 
-def add_internal_row_key(
+def add_internal_discriminator(
     df: pd.DataFrame,
     keys: list[str],
     filename: str,
 ) -> pd.DataFrame:
     """
-    Add an internal discriminator.
-
-    Complete keys receive the same blank discriminator and can match across
-    files. Incomplete keys receive a unique file/row value and stay separate.
+    Complete clinical keys use a common discriminator and may match.
+    Incomplete keys receive a unique discriminator and can never match.
     """
     result = df.copy().astype(object)
-    incomplete_mask = has_missing_key(result, keys)
+    incomplete = missing_key_mask(result, keys)
 
-    result[INTERNAL_ROW_KEY] = ""
+    result[INTERNAL_ROW_KEY] = "COMPLETE_KEY"
 
-    incomplete_positions = result.index[incomplete_mask]
-    for sequence, row_index in enumerate(incomplete_positions, start=1):
-        result.at[
-            row_index,
-            INTERNAL_ROW_KEY,
-        ] = f"{filename}::incomplete_key_row::{sequence}"
+    for sequence, row_index in enumerate(result.index[incomplete], start=1):
+        result.at[row_index, INTERNAL_ROW_KEY] = (
+            f"{filename}::INCOMPLETE::{sequence}"
+        )
 
     return result
 
 
 # ==========================================================
-# Cross-file merge
+# Safe cross-file merge
 # ==========================================================
 
-def merge_ard_tables(
-    ard_tables: dict[str, pd.DataFrame],
-    keys: list[str],
-    separator: str = VALUE_SEPARATOR,
-) -> tuple[
-    pd.DataFrame,
-    pd.DataFrame,
-    pd.DataFrame,
-    dict[str, dict[str, int]],
-]:
+def merge_two_ards(
+    left: pd.DataFrame,
+    right: pd.DataFrame,
+    merge_keys: list[str],
+    processed_files: list[str],
+    incoming_file: str,
+    conflict_records: list[dict[str, Any]],
+) -> pd.DataFrame:
     """
-    Merge ARD tables cell by cell.
+    Outer-join two prepared ARDs on the FULL key.
 
-    Returns:
-    - consolidated ARD;
-    - VALUE_CONFLICTS report;
-    - DUPLICATE_KEYS report;
-    - within-file consolidation statistics.
+    pandas validate='one_to_one' is deliberately used as a safety barrier:
+    if either side is not unique on the complete merge key, execution stops.
     """
-    merged: pd.DataFrame | None = None
-    processed_files: list[str] = []
-    conflict_records: list[dict[str, Any]] = []
-    duplicate_reports: list[pd.DataFrame] = []
-    file_statistics: dict[str, dict[str, int]] = {}
+    left_columns = list(left.columns)
+    right_columns = list(right.columns)
 
-    internal_keys = [*keys, INTERNAL_ROW_KEY]
-
-    for filename, original in ard_tables.items():
-        validate_required_keys(original, keys, filename)
-
-        (
-            consolidated,
-            duplicate_report,
-            within_file_conflicts,
-            statistics,
-        ) = consolidate_duplicate_keys(
-            original,
-            keys,
-            filename,
-            separator,
-        )
-
-        file_statistics[filename] = statistics
-        duplicate_reports.append(duplicate_report)
-        conflict_records.extend(within_file_conflicts)
-
-        current = add_internal_row_key(
-            consolidated,
-            keys,
-            filename,
-        )
-        current = current.set_index(internal_keys).astype(object)
-
-        print(
-            f"  Prepared {filename}: "
-            f"{statistics['INPUT_ROWS']:,} -> "
-            f"{statistics['ROWS_AFTER_INTERNAL_CONSOLIDATION']:,} rows"
-        )
-
-        if statistics["DUPLICATE_COMPLETE_KEY_GROUPS"]:
-            print(
-                "    Complete duplicated-key groups consolidated: "
-                f"{statistics['DUPLICATE_COMPLETE_KEY_GROUPS']:,}"
-            )
-
-        if statistics["NULL_KEY_ROWS"]:
-            print(
-                "    Incomplete-key rows preserved separately: "
-                f"{statistics['NULL_KEY_ROWS']:,}"
-            )
-
-        if merged is None:
-            merged = current.copy().astype(object)
-            processed_files.append(filename)
-            continue
-
-        all_columns = list(merged.columns)
-        all_columns.extend(
-            column
-            for column in current.columns
-            if column not in all_columns
-        )
-
-        # Append/drop_duplicates preserves load order and avoids sorting mixed
-        # key data types during the index union.
-        all_index = merged.index.append(current.index).drop_duplicates()
-
-        merged = merged.reindex(
-            index=all_index,
-            columns=all_columns,
-        ).astype(object)
-
-        current = current.reindex(
-            index=all_index,
-            columns=all_columns,
-        ).astype(object)
-
-        for column in all_columns:
-            left_series = merged[column]
-            right_series = current[column]
-
-            left_present = left_series.map(
-                lambda value: not is_missing(value)
-            )
-            right_present = right_series.map(
-                lambda value: not is_missing(value)
-            )
-
-            fill_mask = ~left_present & right_present
-            if fill_mask.any():
-                merged.loc[fill_mask, column] = right_series.loc[fill_mask]
-
-            both_mask = left_present & right_present
-            if not both_mask.any():
-                continue
-
-            for row_key in merged.index[both_mask]:
-                left_value = merged.at[row_key, column]
-                right_value = current.at[row_key, column]
-
-                if values_equal(left_value, right_value):
-                    continue
-
-                combined_value = merge_cell_values(
-                    left_value,
-                    right_value,
-                    separator,
-                )
-
-                clinical_key = row_key[: len(keys)]
-                conflict = {
-                    key: value
-                    for key, value in zip(keys, clinical_key)
-                }
-                conflict.update(
-                    {
-                        "CONFLICT_STAGE": "BETWEEN_FILES",
-                        "COLUMN": column,
-                        "ACCUMULATED_FILES": separator.join(
-                            processed_files
-                        ),
-                        "ACCUMULATED_VALUE": display_value(left_value),
-                        "INCOMING_FILE": filename,
-                        "INCOMING_VALUE": display_value(right_value),
-                        "MERGED_VALUE": display_value(combined_value),
-                    }
-                )
-                conflict_records.append(conflict)
-
-                merged.at[row_key, column] = combined_value
-
-        processed_files.append(filename)
-
-    if merged is None:
-        raise ValueError("No ARD tables were loaded.")
-
-    merged = merged.reset_index()
-    merged = merged.drop(columns=[INTERNAL_ROW_KEY])
-    merged = sort_merged_ard(merged)
-
-    conflicts = pd.DataFrame(
-        conflict_records,
-        columns=[
-            *keys,
-            "CONFLICT_STAGE",
-            "COLUMN",
-            "ACCUMULATED_FILES",
-            "ACCUMULATED_VALUE",
-            "INCOMING_FILE",
-            "INCOMING_VALUE",
-            "MERGED_VALUE",
-        ],
-    )
-
-    nonempty_duplicate_reports = [
-        report
-        for report in duplicate_reports
-        if not report.empty
+    shared_value_columns = [
+        column
+        for column in left_columns
+        if column in right_columns and column not in merge_keys
     ]
 
-    if nonempty_duplicate_reports:
-        duplicates = pd.concat(
-            nonempty_duplicate_reports,
-            ignore_index=True,
-            sort=False,
-        )
-    else:
-        duplicates = pd.DataFrame(
-            columns=[
-                "FILE",
-                *keys,
-                "ROW_COUNT",
-                "KEY_STATUS",
-                "ACTION",
-                "CONFLICT_COLUMNS",
-            ]
-        )
+    new_columns = [
+        column
+        for column in right_columns
+        if column not in left_columns and column not in merge_keys
+    ]
 
-    return merged, conflicts, duplicates, file_statistics
+    joined = pd.merge(
+        left,
+        right,
+        on=merge_keys,
+        how="outer",
+        suffixes=("", INCOMING_SUFFIX),
+        validate="one_to_one",
+        sort=False,
+    ).astype(object)
+
+    for column in shared_value_columns:
+        incoming_column = f"{column}{INCOMING_SUFFIX}"
+
+        if incoming_column not in joined.columns:
+            continue
+
+        left_values = joined[column]
+        right_values = joined[incoming_column]
+
+        left_present = left_values.map(lambda value: not is_missing(value))
+        right_present = right_values.map(lambda value: not is_missing(value))
+
+        fill_mask = ~left_present & right_present
+        if fill_mask.any():
+            # Positional assignment avoids accidental label/index realignment.
+            joined.loc[fill_mask, column] = right_values.loc[fill_mask].to_numpy()
+
+        both_mask = left_present & right_present
+        for row_index in joined.index[both_mask]:
+            left_value = joined.at[row_index, column]
+            right_value = joined.at[row_index, incoming_column]
+
+            if values_equal(left_value, right_value):
+                continue
+
+            combined = merge_cell_values(left_value, right_value)
+
+            record = {
+                key: joined.at[row_index, key]
+                for key in DEFAULT_KEYS
+            }
+            record.update(
+                {
+                    "CONFLICT_STAGE": "BETWEEN_FILES",
+                    "COLUMN": column,
+                    "ACCUMULATED_FILES": VALUE_SEPARATOR.join(processed_files),
+                    "ACCUMULATED_VALUE": display_value(left_value),
+                    "INCOMING_FILE": incoming_file,
+                    "INCOMING_VALUE": display_value(right_value),
+                    "MERGED_VALUE": display_value(combined),
+                }
+            )
+            conflict_records.append(record)
+            joined.at[row_index, column] = combined
+
+        joined = joined.drop(columns=[incoming_column])
+
+    # Rename truly new incoming columns back to their original names if needed.
+    # pd.merge leaves non-overlapping right columns unchanged, so this is mainly
+    # a defensive check.
+    for column in new_columns:
+        incoming_column = f"{column}{INCOMING_SUFFIX}"
+        if incoming_column in joined.columns and column not in joined.columns:
+            joined = joined.rename(columns={incoming_column: column})
+
+    # Restore predictable column order: original left columns, then new right ones.
+    final_order = left_columns + [column for column in new_columns if column not in left_columns]
+    final_order = [column for column in final_order if column in joined.columns]
+    extras = [column for column in joined.columns if column not in final_order]
+
+    return joined[final_order + extras].astype(object)
 
 
 def sort_merged_ard(df: pd.DataFrame) -> pd.DataFrame:
-    """Apply a stable clinical sort without failing on mixed data types."""
+    """Stable clinical sorting without changing clinical key values."""
     result = df.copy()
-    helper_columns: list[str] = []
+    helpers: list[str] = []
 
     if "USUBJID" in result.columns:
         helper = "__SORT_USUBJID__"
         result[helper] = result["USUBJID"].map(display_value)
-        helper_columns.append(helper)
+        helpers.append(helper)
 
     if "AVISITN" in result.columns:
-        numeric_helper = "__SORT_AVISITN_NUMERIC__"
-        text_helper = "__SORT_AVISITN_TEXT__"
+        num = "__SORT_AVISITN_NUM__"
+        txt = "__SORT_AVISITN_TEXT__"
+        result[num] = pd.to_numeric(result["AVISITN"], errors="coerce").fillna(float("inf"))
+        result[txt] = result["AVISITN"].map(display_value)
+        helpers.extend([num, txt])
 
-        result[numeric_helper] = pd.to_numeric(
-            result["AVISITN"],
-            errors="coerce",
-        )
-        result[numeric_helper] = result[numeric_helper].fillna(float("inf"))
-        result[text_helper] = result["AVISITN"].map(display_value)
+    if "AVISIT_ORDER" in result.columns:
+        helper = "__SORT_AVISIT_ORDER__"
+        result[helper] = result["AVISIT_ORDER"].map(display_value)
+        helpers.append(helper)
 
-        helper_columns.extend([numeric_helper, text_helper])
+    if "AVISIT" in result.columns:
+        helper = "__SORT_AVISIT__"
+        result[helper] = result["AVISIT"].map(display_value)
+        helpers.append(helper)
 
-    for source_column, helper in [
-        ("AVISIT_ORDER", "__SORT_AVISIT_ORDER__"),
-        ("AVISIT", "__SORT_AVISIT__"),
-    ]:
-        if source_column in result.columns:
-            result[helper] = result[source_column].map(display_value)
-            helper_columns.append(helper)
-
-    if helper_columns:
-        result = result.sort_values(
-            helper_columns,
-            kind="stable",
-            na_position="last",
-        )
-        result = result.drop(columns=helper_columns)
+    if helpers:
+        result = result.sort_values(helpers, kind="stable", na_position="last")
+        result = result.drop(columns=helpers)
 
     return result.reset_index(drop=True)
 
 
-# ==========================================================
-# Reports
-# ==========================================================
-
-def compare_files(
+def merge_ard_tables(
     ard_tables: dict[str, pd.DataFrame],
     keys: list[str],
-    file_statistics: dict[str, dict[str, int]],
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, dict[str, dict[str, int]]]:
+    prepared_tables: list[tuple[str, pd.DataFrame]] = []
+    duplicate_reports: list[pd.DataFrame] = []
+    conflict_records: list[dict[str, Any]] = []
+    file_stats: dict[str, dict[str, int]] = {}
+
+    for filename, original in ard_tables.items():
+        validate_required_keys(original, keys, filename)
+
+        consolidated, duplicate_report, within_conflicts, stats = (
+            consolidate_duplicate_complete_keys(original, keys, filename)
+        )
+
+        prepared = add_internal_discriminator(consolidated, keys, filename)
+        prepared_tables.append((filename, prepared))
+        file_stats[filename] = stats
+        conflict_records.extend(within_conflicts)
+
+        if not duplicate_report.empty:
+            duplicate_reports.append(duplicate_report)
+
+        print(
+            f"  Prepared {filename}: {stats['INPUT_ROWS']:,} -> "
+            f"{stats['ROWS_AFTER_INTERNAL_CONSOLIDATION']:,} rows"
+        )
+
+    if not prepared_tables:
+        raise ValueError("No ARD tables were loaded.")
+
+    merge_keys = [*keys, INTERNAL_ROW_KEY]
+
+    first_filename, merged = prepared_tables[0]
+    merged = merged.copy().astype(object)
+    processed_files = [first_filename]
+
+    for incoming_file, current in prepared_tables[1:]:
+        print(f"  Merging: {incoming_file}")
+
+        merged = merge_two_ards(
+            merged,
+            current,
+            merge_keys,
+            processed_files,
+            incoming_file,
+            conflict_records,
+        )
+        processed_files.append(incoming_file)
+
+    merged = merged.drop(columns=[INTERNAL_ROW_KEY])
+    merged = sort_merged_ard(merged)
+
+    conflicts = pd.DataFrame(conflict_records)
+
+    if duplicate_reports:
+        duplicates = pd.concat(duplicate_reports, ignore_index=True, sort=False)
+    else:
+        duplicates = pd.DataFrame(
+            columns=[
+                "FILE", *keys, "ROW_COUNT", "KEY_STATUS", "ACTION", "CONFLICT_COLUMNS"
+            ]
+        )
+
+    return merged, conflicts, duplicates, file_stats
+
+
+# ==========================================================
+# Post-merge safety QC
+# ==========================================================
+
+def build_column_visit_qc(
+    ard_tables: dict[str, pd.DataFrame],
+    merged_ard: pd.DataFrame,
 ) -> pd.DataFrame:
-    """Create a file-level comparison and QC summary."""
-    all_columns: set[str] = set()
-    common_columns: set[str] | None = None
+    """
+    Verify that merge did not create a populated variable at a new AVISIT.
+
+    Example: if ADHISTI_PARAMCD_HREMGB_AVALC is populated only at Screening,
+    Week 12, and Week 28 in ALL inputs, the output is forbidden from having it
+    populated at Week 16 or Week 36.
+    """
+    source_visits: dict[str, set[str]] = {}
 
     for df in ard_tables.values():
-        current_columns = set(df.columns)
-        all_columns.update(current_columns)
+        if "AVISIT" not in df.columns:
+            continue
 
-        if common_columns is None:
-            common_columns = current_columns
-        else:
-            common_columns &= current_columns
+        for column in df.columns:
+            if column in DEFAULT_KEYS:
+                continue
 
-    common_columns = common_columns or set()
+            populated = df[column].map(lambda value: not is_missing(value))
+            if not populated.any():
+                continue
+
+            visits = {
+                display_value(value)
+                for value in df.loc[populated, "AVISIT"]
+                if not is_missing(value)
+            }
+            source_visits.setdefault(column, set()).update(visits)
+
     records: list[dict[str, Any]] = []
 
-    for filename, df in ard_tables.items():
-        validate_required_keys(df, keys, filename)
+    for column in merged_ard.columns:
+        if column in DEFAULT_KEYS or column not in source_visits:
+            continue
 
-        incomplete_mask = has_missing_key(df, keys)
-        complete = df.loc[~incomplete_mask]
-        statistics = file_statistics[filename]
+        populated = merged_ard[column].map(lambda value: not is_missing(value))
+        output_visits = {
+            display_value(value)
+            for value in merged_ard.loc[populated, "AVISIT"]
+            if not is_missing(value)
+        }
+
+        unexpected = output_visits - source_visits[column]
 
         records.append(
             {
-                "FILE": filename,
-                "ROWS": len(df),
-                "ROWS_AFTER_INTERNAL_CONSOLIDATION": statistics[
-                    "ROWS_AFTER_INTERNAL_CONSOLIDATION"
-                ],
-                "COLUMNS": len(df.columns),
-                "SUBJECTS": df["USUBJID"].nunique(dropna=True),
-                "VISITS": df["AVISIT"].nunique(dropna=True),
-                "UNIQUE_COMPLETE_KEYS": complete[
-                    keys
-                ].drop_duplicates().shape[0],
-                "NULL_KEY_ROWS_KEPT_SEPARATE": statistics[
-                    "NULL_KEY_ROWS"
-                ],
-                "DUPLICATE_COMPLETE_KEY_ROWS": statistics[
-                    "DUPLICATE_COMPLETE_KEY_ROWS"
-                ],
-                "DUPLICATE_COMPLETE_KEY_GROUPS": statistics[
-                    "DUPLICATE_COMPLETE_KEY_GROUPS"
-                ],
-                "COLUMNS_ONLY_IN_THIS_FILE": len(
-                    set(df.columns) - common_columns
-                ),
-                "MISSING_FROM_GLOBAL_COLUMN_UNION": len(
-                    all_columns - set(df.columns)
-                ),
+                "COLUMN": column,
+                "SOURCE_POPULATED_VISITS": VALUE_SEPARATOR.join(sorted(source_visits[column])),
+                "OUTPUT_POPULATED_VISITS": VALUE_SEPARATOR.join(sorted(output_visits)),
+                "UNEXPECTED_OUTPUT_VISITS": VALUE_SEPARATOR.join(sorted(unexpected)),
+                "QC_STATUS": "FAIL" if unexpected else "PASS",
             }
         )
 
     return pd.DataFrame(records)
 
 
-def merge_paramcd_dict(
-    dictionaries: Iterable[pd.DataFrame],
-) -> pd.DataFrame:
-    """Consolidate PARAMCD dictionaries, removing exact duplicates only."""
-    available = [
-        df.copy()
-        for df in dictionaries
-        if df is not None and not df.empty
-    ]
+def assert_visit_qc(column_visit_qc: pd.DataFrame) -> None:
+    if column_visit_qc.empty:
+        return
 
-    if not available:
-        return pd.DataFrame(
-            columns=["PARAMCD", "PARAM", "SOURCE"]
-        )
+    failed = column_visit_qc.loc[column_visit_qc["QC_STATUS"] == "FAIL"]
+    if failed.empty:
+        return
 
-    merged = pd.concat(
-        available,
-        ignore_index=True,
-        sort=False,
+    examples = failed[
+        ["COLUMN", "UNEXPECTED_OUTPUT_VISITS"]
+    ].head(10).to_string(index=False)
+
+    raise RuntimeError(
+        "Post-merge visit QC failed. The merge produced populated variables at "
+        "AVISIT values where those variables were not populated in any source.\n\n"
+        f"Examples:\n{examples}\n\n"
+        "No output workbook was written. Review the merge keys/source data."
     )
-
-    expected_order = [
-        column
-        for column in ["PARAMCD", "PARAM", "SOURCE"]
-        if column in merged.columns
-    ]
-    other_columns = [
-        column
-        for column in merged.columns
-        if column not in expected_order
-    ]
-
-    merged = merged[expected_order + other_columns]
-    merged = merged.drop_duplicates().reset_index(drop=True)
-
-    sort_columns = [
-        column
-        for column in ["SOURCE", "PARAMCD", "PARAM"]
-        if column in merged.columns
-    ]
-
-    if sort_columns:
-        temporary_sort_columns: list[str] = []
-
-        for position, column in enumerate(sort_columns):
-            helper = f"__DICT_SORT_{position}__"
-            merged[helper] = merged[column].map(display_value)
-            temporary_sort_columns.append(helper)
-
-        merged = merged.sort_values(
-            temporary_sort_columns,
-            kind="stable",
-            na_position="last",
-        )
-        merged = merged.drop(columns=temporary_sort_columns)
-        merged = merged.reset_index(drop=True)
-
-    return merged
-
-
-def create_merge_summary(
-    files: list[Path],
-    ard_tables: dict[str, pd.DataFrame],
-    merged_ard: pd.DataFrame,
-    merged_dict: pd.DataFrame,
-    conflicts: pd.DataFrame,
-    duplicates: pd.DataFrame,
-    file_statistics: dict[str, dict[str, int]],
-) -> pd.DataFrame:
-    """Create a compact overview of the completed merge."""
-    consolidated_groups = 0
-
-    if not duplicates.empty:
-        consolidated_groups = int(
-            (duplicates["ACTION"] == "CONSOLIDATED").sum()
-        )
-
-    metrics = [
-        ("FILES_MERGED", len(files)),
-        (
-            "INPUT_ROWS_TOTAL",
-            sum(len(df) for df in ard_tables.values()),
-        ),
-        ("OUTPUT_ARD_ROWS", len(merged_ard)),
-        ("OUTPUT_ARD_COLUMNS", len(merged_ard.columns)),
-        (
-            "OUTPUT_SUBJECTS",
-            merged_ard["USUBJID"].nunique(dropna=True),
-        ),
-        (
-            "OUTPUT_VISITS",
-            merged_ard["AVISIT"].nunique(dropna=True),
-        ),
-        (
-            "INCOMPLETE_KEY_ROWS_KEPT_SEPARATE",
-            sum(
-                statistics["NULL_KEY_ROWS"]
-                for statistics in file_statistics.values()
-            ),
-        ),
-        (
-            "DUPLICATE_KEY_GROUPS_CONSOLIDATED",
-            consolidated_groups,
-        ),
-        ("VALUE_CONFLICT_RECORDS", len(conflicts)),
-        ("PARAMCD_DICT_ROWS", len(merged_dict)),
-    ]
-
-    return pd.DataFrame(metrics, columns=["METRIC", "VALUE"])
 
 
 # ==========================================================
-# Excel input/output
+# Reports / dictionaries
+# ==========================================================
+
+def compare_files(
+    ard_tables: dict[str, pd.DataFrame],
+    file_stats: dict[str, dict[str, int]],
+) -> pd.DataFrame:
+    all_columns: set[str] = set()
+    common_columns: set[str] | None = None
+
+    for df in ard_tables.values():
+        columns = set(df.columns)
+        all_columns.update(columns)
+        common_columns = columns if common_columns is None else common_columns & columns
+
+    common_columns = common_columns or set()
+    records: list[dict[str, Any]] = []
+
+    for filename, df in ard_tables.items():
+        stats = file_stats[filename]
+        records.append(
+            {
+                "FILE": filename,
+                "ROWS": len(df),
+                "ROWS_AFTER_INTERNAL_CONSOLIDATION": stats["ROWS_AFTER_INTERNAL_CONSOLIDATION"],
+                "COLUMNS": len(df.columns),
+                "SUBJECTS": df["USUBJID"].nunique(dropna=True),
+                "VISITS": df["AVISIT"].nunique(dropna=True),
+                "NULL_KEY_ROWS_KEPT_SEPARATE": stats["NULL_KEY_ROWS"],
+                "DUPLICATE_COMPLETE_KEY_ROWS": stats["DUPLICATE_COMPLETE_KEY_ROWS"],
+                "DUPLICATE_COMPLETE_KEY_GROUPS": stats["DUPLICATE_COMPLETE_KEY_GROUPS"],
+                "COLUMNS_ONLY_IN_THIS_FILE": len(set(df.columns) - common_columns),
+                "MISSING_FROM_GLOBAL_COLUMN_UNION": len(all_columns - set(df.columns)),
+            }
+        )
+
+    return pd.DataFrame(records)
+
+
+def merge_paramcd_dict(dictionaries: Iterable[pd.DataFrame]) -> pd.DataFrame:
+    available = [df.copy() for df in dictionaries if df is not None and not df.empty]
+    if not available:
+        return pd.DataFrame(columns=["PARAMCD", "PARAM", "SOURCE"])
+
+    merged = pd.concat(available, ignore_index=True, sort=False)
+    return merged.drop_duplicates().reset_index(drop=True)
+
+
+# ==========================================================
+# File I/O
 # ==========================================================
 
 def validate_configuration() -> tuple[list[Path], Path]:
-    """Validate configured paths and return input/output files."""
     if not INPUT_FOLDER.exists():
-        raise FileNotFoundError(
-            f"Input folder was not found:\n{INPUT_FOLDER}"
-        )
+        raise FileNotFoundError(f"Input folder not found:\n{INPUT_FOLDER}")
 
     if len(FILES_TO_MERGE) < 2:
-        raise ValueError(
-            "FILES_TO_MERGE must contain at least two Excel files."
-        )
+        raise ValueError("FILES_TO_MERGE must contain at least two files.")
 
-    if len(FILES_TO_MERGE) != len(set(FILES_TO_MERGE)):
-        raise ValueError(
-            "FILES_TO_MERGE contains repeated filenames."
-        )
+    input_files = [INPUT_FOLDER / name for name in FILES_TO_MERGE]
+    missing = [file for file in input_files if not file.is_file()]
 
-    if not OUTPUT_NAME.lower().endswith(".xlsx"):
-        raise ValueError(
-            "OUTPUT_NAME must end with '.xlsx'."
-        )
-
-    input_files = [
-        INPUT_FOLDER / filename
-        for filename in FILES_TO_MERGE
-    ]
-
-    missing_files = [
-        file
-        for file in input_files
-        if not file.is_file()
-    ]
-
-    if missing_files:
-        formatted = "\n".join(
-            f"  - {file.name}"
-            for file in missing_files
-        )
-        raise FileNotFoundError(
-            "The following configured files were not found:\n"
-            f"{formatted}\n\n"
-            f"Expected folder:\n{INPUT_FOLDER}"
-        )
+    if missing:
+        text = "\n".join(f"  - {file.name}" for file in missing)
+        raise FileNotFoundError(f"Configured files not found:\n{text}")
 
     output_file = OUTPUT_FOLDER / OUTPUT_NAME
-
-    if output_file in input_files:
-        raise ValueError(
-            "The output file cannot also be an input file."
-        )
-
     return input_files, output_file
 
 
 def load_workbooks(
     files: list[Path],
 ) -> tuple[dict[str, pd.DataFrame], list[pd.DataFrame]]:
-    """Read ARD and optional PARAMCD_DICT worksheets."""
     ard_tables: dict[str, pd.DataFrame] = {}
     dictionaries: list[pd.DataFrame] = []
 
@@ -1029,93 +688,42 @@ def load_workbooks(
 
     for file in files:
         print(f"  Reading: {file.name}")
-
         with pd.ExcelFile(file, engine="openpyxl") as excel:
             if "ARD" not in excel.sheet_names:
-                raise ValueError(
-                    f"{file.name}: sheet 'ARD' was not found."
-                )
+                raise ValueError(f"{file.name}: sheet 'ARD' was not found.")
 
-            ard = pd.read_excel(
-                excel,
-                sheet_name="ARD",
-            )
-            ard_tables[file.name] = ard
+            ard_tables[file.name] = pd.read_excel(excel, sheet_name="ARD")
 
             if "PARAMCD_DICT" in excel.sheet_names:
-                dictionary = pd.read_excel(
-                    excel,
-                    sheet_name="PARAMCD_DICT",
-                )
-                dictionaries.append(dictionary)
-            else:
-                print(
-                    "    Warning: PARAMCD_DICT sheet was not found."
-                )
+                dictionaries.append(pd.read_excel(excel, sheet_name="PARAMCD_DICT"))
 
     return ard_tables, dictionaries
 
 
-def write_output_workbook(
+def write_output(
     output_file: Path,
     merged_ard: pd.DataFrame,
     merged_dict: pd.DataFrame,
-    merge_summary: pd.DataFrame,
     comparison: pd.DataFrame,
     conflicts: pd.DataFrame,
     duplicates: pd.DataFrame,
     source_files: pd.DataFrame,
+    column_visit_qc: pd.DataFrame,
 ) -> None:
-    """Write the final ARD and all traceability reports."""
-    output_file.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
+    output_file.parent.mkdir(parents=True, exist_ok=True)
 
     try:
-        with pd.ExcelWriter(
-            output_file,
-            engine="openpyxl",
-        ) as writer:
-            merged_ard.to_excel(
-                writer,
-                sheet_name="ARD",
-                index=False,
-            )
-            merged_dict.to_excel(
-                writer,
-                sheet_name="PARAMCD_DICT",
-                index=False,
-            )
-            merge_summary.to_excel(
-                writer,
-                sheet_name="MERGE_SUMMARY",
-                index=False,
-            )
-            comparison.to_excel(
-                writer,
-                sheet_name="FILE_COMPARISON",
-                index=False,
-            )
-            conflicts.to_excel(
-                writer,
-                sheet_name="VALUE_CONFLICTS",
-                index=False,
-            )
-            duplicates.to_excel(
-                writer,
-                sheet_name="DUPLICATE_KEYS",
-                index=False,
-            )
-            source_files.to_excel(
-                writer,
-                sheet_name="SOURCE_FILES",
-                index=False,
-            )
+        with pd.ExcelWriter(output_file, engine="openpyxl") as writer:
+            merged_ard.to_excel(writer, sheet_name="ARD", index=False)
+            merged_dict.to_excel(writer, sheet_name="PARAMCD_DICT", index=False)
+            comparison.to_excel(writer, sheet_name="FILE_COMPARISON", index=False)
+            conflicts.to_excel(writer, sheet_name="VALUE_CONFLICTS", index=False)
+            duplicates.to_excel(writer, sheet_name="DUPLICATE_KEYS", index=False)
+            column_visit_qc.to_excel(writer, sheet_name="COLUMN_VISIT_QC", index=False)
+            source_files.to_excel(writer, sheet_name="SOURCE_FILES", index=False)
     except PermissionError as error:
         raise PermissionError(
-            f"Could not write the output file:\n{output_file}\n\n"
-            "Close the workbook in Excel and run the script again."
+            f"Could not write output:\n{output_file}\nClose it in Excel and run again."
         ) from error
 
 
@@ -1125,27 +733,22 @@ def write_output_workbook(
 
 def main() -> None:
     input_files, output_file = validate_configuration()
-
     ard_tables, dictionaries = load_workbooks(input_files)
 
-    print("\nValidating and merging ARD tables...")
+    print("\nSafely merging ARD tables using the full clinical key...")
 
-    (
-        merged_ard,
-        conflicts,
-        duplicates,
-        file_statistics,
-    ) = merge_ard_tables(
+    merged_ard, conflicts, duplicates, file_stats = merge_ard_tables(
         ard_tables,
         DEFAULT_KEYS,
-        VALUE_SEPARATOR,
     )
 
-    comparison = compare_files(
-        ard_tables,
-        DEFAULT_KEYS,
-        file_statistics,
-    )
+    print("\nRunning post-merge visit-scope QC...")
+    column_visit_qc = build_column_visit_qc(ard_tables, merged_ard)
+
+    if STRICT_VISIT_QC:
+        assert_visit_qc(column_visit_qc)
+
+    comparison = compare_files(ard_tables, file_stats)
     merged_dict = merge_paramcd_dict(dictionaries)
 
     source_files = pd.DataFrame(
@@ -1155,27 +758,16 @@ def main() -> None:
         }
     )
 
-    merge_summary = create_merge_summary(
-        input_files,
-        ard_tables,
-        merged_ard,
-        merged_dict,
-        conflicts,
-        duplicates,
-        file_statistics,
-    )
-
-    print("\nWriting output workbook...")
-
-    write_output_workbook(
+    print("Writing output workbook...")
+    write_output(
         output_file,
         merged_ard,
         merged_dict,
-        merge_summary,
         comparison,
         conflicts,
         duplicates,
         source_files,
+        column_visit_qc,
     )
 
     print("\nMerge completed successfully.")
@@ -1184,11 +776,10 @@ def main() -> None:
     print(f"ARD columns: {len(merged_ard.columns):,}")
     print(f"Subjects: {merged_ard['USUBJID'].nunique(dropna=True):,}")
     print(f"Visits: {merged_ard['AVISIT'].nunique(dropna=True):,}")
-    print(f"PARAMCD dictionary rows: {len(merged_dict):,}")
     print(f"Conflict records: {len(conflicts):,}")
     print(f"Duplicated-key groups reported: {len(duplicates):,}")
+    print("COLUMN_VISIT_QC: all checks PASS.")
 
 
 if __name__ == "__main__":
     main()
-
