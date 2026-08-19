@@ -1,11 +1,17 @@
 # example4
 
-The aCRF shows how the clinical data were originally collected from the patient/site, while the Define-XML describes how the standardized SDTM or ADaM datasets are structured and how their variables were derived.
+Hi Shuixin,
 
-In simple terms:
+Thank you for sharing the define.pdf.
 
-aCRF = source/collection perspective: helps us understand where the clinical data originated and which CRF fields were collected.
-Define-XML = dataset/programming perspective: helps us understand which variables are available in SDTM/ADaM, their metadata, origins, controlled terminology, and derivations.
+I reviewed the file and compared it with our current GRAVITI variable gap analysis. I noticed that the define.pdf provided appears to cover mainly the ADALTEFF dataset, while we have already identified several variables available in other ADaM datasets for this study.
 
-Therefore, the aCRF is especially useful for tracing a variable back to the original clinical data collection, whereas the Define-XML is more useful for identifying and understanding variables already available in the standardized analysis datasets.
+Would there be a more comprehensive or updated version of the Define-XML/define.pdf that includes the other available ADaM datasets as well? If so, it would be very helpful for us to perform a more complete review of the remaining variable gaps.
+
+Additionally, would an annotated CRF (aCRF) be available for this study? Access to the aCRF could help us investigate variables that are not available in ADaM and determine whether the underlying information was originally collected and may be available from an upstream source.
+
+Thank you again for your support.
+
+Best regards,
+Jean
 
