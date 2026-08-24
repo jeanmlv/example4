@@ -1,11 +1,7 @@
 # example4
 
-Hi Basudeb, good morning! Sure, here’s a quick update:
+For ANTHEM, we had 7 pending variables. Based on Steven’s final feedback, we were able to clarify all of them.
 
-ANTHEM: This one is already closed. I finalized the variable collection and shared the completed dataset with Pablo.
+Some were not collected in ANTHEM, such as HEHL and NANCYHI. For the others — HIHL, ENHLP, CORTBL, HEHLP, and ENNRMP — the exact variables were not directly collected, but Steven identified equivalent or closely related variables/endpoints that can be used instead.
 
-POWER: I spoke with Raju and he already got back to me. I reviewed the information he provided, but there are still a few pending variables that he is currently checking. I expect to hear back from him by Wednesday.
-
-GRAVITI: Shuixin has also replied and I’m currently reviewing the information he shared. I expect to complete the GRAVITI variable assessment today.
-
-So overall, ANTHEM is completed, POWER is waiting on a few final clarifications, and GRAVITI should be completed today.
+So there are no further pending items for ANTHEM, which is why I considered the variable collection completed.
