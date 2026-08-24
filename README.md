@@ -1,9 +1,11 @@
 # example4
 
-Hi Raju, thanks for the review. I’ve reviewed the POWER gap analysis based on the information you shared.
+Hi Basudeb, good morning! Sure, here’s a quick update:
 
-I highlighted in blue (column G) a few variables that you confirmed as available, but I couldn’t find them in the ADaM datasets currently available to me in Domino. I’m wondering if the datasets you reviewed might be more up to date than the versions I currently have access to.
+ANTHEM: This one is already closed. I finalized the variable collection and shared the completed dataset with Pablo.
 
-The variables highlighted in grey are the ones you confirmed were not collected for this trial.
+POWER: I spoke with Raju and he already got back to me. I reviewed the information he provided, but there are still a few pending variables that he is currently checking. I expect to hear back from him by Wednesday.
 
-Would you be available for a quick call so we can go through the blue items together and align on where I can find them?
+GRAVITI: Shuixin has also replied and I’m currently reviewing the information he shared. I expect to complete the GRAVITI variable assessment today.
+
+So overall, ANTHEM is completed, POWER is waiting on a few final clarifications, and GRAVITI should be completed today.
