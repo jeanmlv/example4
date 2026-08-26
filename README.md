@@ -2,6 +2,9 @@
 
 For ANTHEM, we had 7 pending variables. Based on Steven’s final feedback, we were able to clarify all of them.
 
-Hi Basudeb, regarding the flow with the known gaps identified that Bahador mentioned, have you had a chance to start working on it?
+Hi Basudeb, I reviewed the flow and I think the overall structure looks good. I have a few suggestions to make it more aligned with the process we are currently following for the ARD gap analysis.
 
-Since we need to have this flow ready by Monday, if you have any questions or would like to work on the flow together, we can schedule a quick call tomorrow or Friday. Let me know what works best for you.
+I drafted an updated version including the initial ARD creation/update and gap analysis, the use of metadata such as aCRF/Define to help resolve missing variables, and the step where updated ADaM datasets need to be made available in Domino before we can re-run the ARD.
+
+I can share my proposed flow with you and we can align on it together. Let me know what you think.
+
