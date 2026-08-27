@@ -8,3 +8,5 @@ I drafted an updated version including the initial ARD creation/update and gap a
 
 I can share my proposed flow with you and we can align on it together. Let me know what you think.
 
+Indicates the overall latest timepoint available in the study data. Availability may vary by variable, and some variables may only be available through earlier timepoints.
+
