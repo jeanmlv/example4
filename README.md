@@ -26,5 +26,7 @@ Thank you in advance for your support. Please let me know if you have any questi
 Best regards,
 Jean
 
+As part of our current data assessment, we are reviewing the variables available in the ADaM datasets and comparing them against a predefined set of variables of interest that we would like to evaluate for each study. The goal is to understand the current data coverage and identify any potential gaps.
+
 
 
