@@ -1,10 +1,10 @@
 # example4
 
-Hi Sonal, I was taking a look at ORBIT and wanted to better understand how we should use it for the study onboarding / ARD process we discussed today.
+Hi Sonal, I was taking a look at ORBIT and wanted to better understand how we should use it for the study onboarding / ARD process we discussed today at the IMM GI Data Updates meeting.
 
-Do you have any instructions, user guide, or documentation on how to use ORBIT? That would be really helpful for me to get familiar with the process.
+For the study onboarding (see image below), should I start by creating a New Request in ORBIT and selecting Analytics, or will there be a specific request type for ARD requests?
 
-For the study onboarding, should I start by creating a New Request in ORBIT? And regarding the request type, should this be submitted as an ARD request, or is there going to be a specific request type/workflow created for this process?
+Also, if there are any instructions or user guides on how to use ORBIT and create/manage these requests, could you please share them with me? That would be really helpful.
 
 Thanks for your help!
 
