@@ -6,6 +6,8 @@ For the study onboarding (see image below), should I start by creating a New Req
 
 Also, if there are any instructions or user guides on how to use ORBIT and create/manage these requests, could you please share them with me? That would be really helpful.
 
+Also, if you have any instructions or a step-by-step guide on how to create the request and what information I should provide in each step/field, that would be very helpful.
+
 Thanks for your help!
 
 
