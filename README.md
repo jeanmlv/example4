@@ -1,14 +1,18 @@
 # example4
 
-Hi Sonal, I was taking a look at ORBIT and wanted to better understand how we should use it for the study onboarding / ARD process we discussed today at the IMM GI Data Updates meeting.
+Hi Pablo,
 
-For the study onboarding (see image below), should I start by creating a New Request in ORBIT and selecting Analytics, or will there be a specific request type for ARD requests?
+I checked the studies listed under Request ID 1044. Please see the status for each study below:
 
-Also, if there are any instructions or user guides on how to use ORBIT and create/manage these requests, could you please share them with me? That would be really helpful.
+[manter sua tabela]
 
-Also, if you have any instructions or a step-by-step guide on how to create the request and what information I should provide in each step/field, that would be very helpful.
+For 7 of the 9 studies, I was able to confirm that the SDTM and ADaM datasets are available in Med.AI.
 
-Thanks for your help!
+However, I could not find CNTO148UC03001 and CNTO1959PUC3001 in Med.AI. Could we please confirm whether these two studies have also been ingested, or if any additional action is still required for them?
 
+For the remaining studies, everything looks good from my side.
+
+Regards,
+Jean
 
 
