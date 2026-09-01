@@ -1,11 +1,9 @@
 # example4
 
-Fabio, I think we should double-check this before renaming anything. I opened the ARD in the current CNTO148UC03001-PURSUIT-J folder, and I noticed that the USUBJIDs are actually coded as CNTO148UC02001.
+I also found the ClinicalTrials.gov records for both studies, which may help us double-check this:
 
-Since CNTO148UC02001 appears to be associated with PROgECT, while CNTO148UC03001 should be PURSUIT-J, I'm not sure which study the data in this folder actually belong to.
+PROgECT (CNTO148UC02001): ClinicalTrials.gov – NCT01988961
 
-Could we verify this internally before making any changes to the folder name?
+PURSUIT-J (CNTO148UC03001): ClinicalTrials.gov – NCT01863771
 
-I checked the Study IDs again, and CNTO148UC02001 is actually a different study (PROgECT), so it does not refer to PURSUIT-J.
-
-The correct Study ID for PURSUIT-J is CNTO148UC03001. So the current folder name CNTO148UC03001-PURSUIT-J is actually correct and should remain as it is.
+This is why I think we should verify the dataset before renaming anything. The folder is labeled CNTO148UC03001-PURSUIT-J, but the USUBJIDs inside the ARD are coded as CNTO148UC02001. So it looks like the folder name and the actual data may be referring to different studies.
