@@ -1,16 +1,14 @@
 # example4
 
-Sure, Fabio! Here it is:
+Hi Pablo,
 
-CNTO1275CRD3001 – Available in Med.AI
-CNTO1275CRD3002 – Available in Med.AI
-CNTO1275CRD3003 – Available in Med.AI
-CNTO1275CRD3004 – Available in Med.AI, but not present in Domino
-CNTO1275CRD1001 – Available in Med.AI, but not present in Domino
-CNTO148UC03003 – Available in Med.AI
-CNTO1275CRD3008 – Available in Med.AI
-CNTO148UC03001 – Not found in Med.AI
-CNTO1959PUC3001 – Not found in Med.AI
+You’re right. I double-checked CNTO148UC03001 (PURSUIT-J) and confirmed that both SDTM and ADaM data are available in Domino.
 
-Thanks for checking!
+I initially missed it because the study ID is listed incorrectly in the Domino folder name for PURSUIT-J.
 
+So, correction to my previous message: CNTO148UC03001 is available, and the only study from the list that is currently not available is CNTO1959PUC3001 (QUASAR JR).
+
+Thanks for pointing this out.
+
+Regards,
+Jean
