@@ -1,15 +1,10 @@
 # example4
 
-Hi everyone, unfortunately I won’t be able to join today’s meeting due to a scheduling conflict.
+Hi Lev, GRAVITI is a Crohn's disease (CD) study. For our gap analysis, Geboes and Robarts scores were not among the variables of interest defined for the CD studies, as these scores are generally associated with ulcerative colitis (UC).
 
-Just a quick update from my side:
+You can see the specific variables of interest assessed for each study, as well as the corresponding mapping results, in the “CD variables gap analysis” Excel file available in the SharePoint folder.
 
-Regarding the gap analysis, I’m currently waiting for Sonal’s feedback on the adjustments to the ARD Request workflow in ORBIT. Once the workflow is ready, we should be able to continue the follow-up on the remaining study gaps through ORBIT. The last email I sent directly to a PL was to Renping Zhang regarding UNIFI JR on August 28, but I haven’t received a response yet. Going forward, my understanding is that this follow-up should be managed through ORBIT.
+Regarding GHAS specifically, based on the metadata files provided to us by the PL for GRAVITI, we were not able to identify GHAS as a collected variable/score for this study.
 
-For POWER, I’m currently finalizing the review of the variable mappings and remaining gaps, and I expect to complete the gap analysis for this study later this week.
-
-Please let me know if there are any questions or additional points you would like me to follow up on.
-
-Thanks!
-Jean
+If needed, I can also share the metadata we used for the GRAVITI assessment so we can confirm whether there may be an additional source containing these scores.
 
