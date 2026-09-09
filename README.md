@@ -1,10 +1,14 @@
 # example4
 
-Hi Lev, GRAVITI is a Crohn's disease (CD) study. For our gap analysis, Geboes and Robarts scores were not among the variables of interest defined for the CD studies, as these scores are generally associated with ulcerative colitis (UC).
+For GRAVITI, the variables we identified in the available data related to Geboes, GHAS, and RHI were the following:
 
-You can see the specific variables of interest assessed for each study, as well as the corresponding mapping results, in the “CD variables gap analysis” Excel file available in the SharePoint folder.
+ERSSGEP – Geboes Histo-Endoscopic Response, Subject-Level
+ERSSGHP – GHAS Histo-Endoscopic Response, Subject-Level
+ERSSRHP – RHI Histo-Endoscopic Response, Subject-Level
+GERESPSP – Geboes Histologic Response, Subject-Level
+GHRESPSP – GHAS Histologic Response, Subject-Level
+RHRESPSP – RHI Histologic Response, Subject-Level
 
-Regarding GHAS specifically, based on the metadata files provided to us by the PL for GRAVITI, we were not able to identify GHAS as a collected variable/score for this study.
+These are the variables we were able to identify for these scores in the GRAVITI data.
 
-If needed, I can also share the metadata we used for the GRAVITI assessment so we can confirm whether there may be an additional source containing these scores.
-
+However, these appear to be response-level variables derived from the scores. We did not identify the underlying individual Geboes, GHAS, or RHI score values in the variables we mapped.
