@@ -1,11 +1,15 @@
 # example4
 
-Yes, in the Assets tab it's actually possible to have multiple entries for the same Study ID. Each entry represents a different asset/source where information for that study is available.
+Hi everyone, unfortunately I won’t be able to join today’s meeting due to a scheduling conflict.
 
-For example, here we can see that CNTO1959UCO3001 has several assets in Med.ai Clinical Trials, covering different parts/timepoints of the study, as well as an IMM Endoscopy asset. So I think we should keep these as separate entries in the Assets tab rather than selecting only one.
+Just a quick update from my side:
 
-Later, when I create the Analysis-Ready Dataset (ARD), I merge and aggregate the relevant information from these different sources into a single analysis-ready file.
+Regarding the gap analysis, I’m currently waiting for Sonal’s feedback on the adjustments to the ARD Request workflow in ORBIT. Once the workflow is ready, we should be able to continue the follow-up on the remaining study gaps through ORBIT. The last email I sent directly to a PL was to Renping Zhang regarding UNIFI JR on August 28, but I haven’t received a response yet. Going forward, my understanding is that this follow-up should be managed through ORBIT.
 
-E eu acrescentaria uma última frase para deixar bem explícito o que ele deve fazer:
+For POWER, I’m currently finalizing the review of the variable mappings and remaining gaps, and I expect to complete the gap analysis for this study later this week.
 
-So for the Assets tab, you can enter all the applicable assets you find for each Study ID, one per row.
+Please let me know if there are any questions or additional points you would like me to follow up on.
+
+Thanks!
+Jean
+
