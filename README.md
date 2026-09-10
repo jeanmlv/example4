@@ -1,3 +1,5 @@
 # example4
 
-Hi Pablo, Geboes and RHI were included in our list of variables of interest only for the UC studies, as shown in the UC gap analysis. They were not part of the variables we were requesting/mapping for the CD studies. Since GALAXI is a CD study, we haven't specifically requested Geboes or RHI for GALAXI as part of the current gap analysis. If we now want to include these scores for GALAXI as well, we can add them as additional variables of interest and follow up accordingly.
+Hi Lev, GHAS was already included in our variables of interest for CD trials. For example, we were able to identify TGHAS (Total GHAS Score) for GALAXI. For GRAVITI, however, we were not able to identify the GHAS score, so we reviewed the metadata documents (Define.pdf and aCRF) provided by the GRAVITI Portfolio Lead, Shuixin Ji, and confirmed that this endpoint was not collected for the study.
+
+Regarding Geboes and RHI, I’ll add them to our gap analysis for the CD trials and review the studies we’ve already assessed. I should be able to have this updated for GRAVITI by the end of this week.
