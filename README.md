@@ -1,20 +1,3 @@
 # example4
 
-Hi everyone, I made an update to the Data Splits section of the inventory based on the split files that the team shared in the V-Squad group.
-
-I reorganized this section into two levels:
-
-05_DATA_SPLITS – I added the columns Dataset Role, Split Label, and CV Fold to improve and provide more detail in this summary view. I also added comments to the columns indicating where the information should come from.
-
-05A_DATA_SPLIT_DETAILS – I also created this new tab to capture the granular information from the split files shared by the team. I used JAK UC as the first example, based on the file Krishna shared.
-
-So the idea is basically:
-05_DATA_SPLITS = summary view
-05A_DATA_SPLIT_DETAILS = detailed/source-level view
-
-I already populated JAK UC as an example/reference.
-
-@RAVI, could you use the same approach to populate the remaining studies (UNIFI and GALAXI-1)? We just need to check the format Pooya used for the other split files and adapt the mapping accordingly.
-
-If you have any questions while filling this in, just let me know. Thanks!
-
+Yes, I think that makes sense. We can use these two tabs as the master/reference lists of variables of interest for UC and CD studies. Then, 06A_ARD_VARIABLES would remain study-specific, showing the variables actually identified/mapped for each individual study. This would help keep the variables we are looking for separate from what is actually available in each study.
