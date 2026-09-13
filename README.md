@@ -1,13 +1,174 @@
 # example4
 
-For some endpoints, there may be multiple observed records for the same subject and visit in the source ADaM dataset. Since the ARD is structured at the subject-by-visit level, these multiple values are concatenated into a single field rather than selecting or dropping one of them.
+from pathlib import Path
+import pandas as pd
 
-For example, for GBTOT, the source dataset contains AVAL values of 9, 8, 10, and 12 for the same USUBJID and AVISIT. Therefore, the ARD displays them as 9 | 8 | 10 | 12. This preserves all source observations and avoids making an assumption about which value should be retained.
 
-xxxxx
+# ============================================================
+# CONFIGURATION
+# ============================================================
 
-They are not necessarily duplicate records. They share the same subject, visit, and endpoint, but they may represent different analysis records or analysis contexts in the source ADaM. When we collapse the data to the ARD subject-by-visit structure, that additional record-level distinction is no longer part of the ARD key, so the values are concatenated.
+input_folder = Path(
+    r"C:\Users\JMende95\OneDrive - JNJ\Desktop\ard_data\csv"
+)
 
-xxxx 
+input_file = (
+    input_folder
+    / "CNTO1275CRD3008_power_wk36_ard_20260621.csv"
+)
 
-That's because we have multiple records for this endpoint for the same subject and visit in the source ADaM. Since our ARD has one row per subject and visit, we concatenate the observed values instead of arbitrarily selecting one and potentially losing information.
+output_folder = input_folder / "slim"
+output_folder.mkdir(exist_ok=True)
+
+output_file = (
+    output_folder
+    / "CNTO1275CRD3008_power_wk36_ard_slim_20260913.csv"
+)
+
+
+# ============================================================
+# COLUMNS TO KEEP
+# ============================================================
+
+keys = [
+    "USUBJID",
+    "AVISIT",
+    "AVISITN"
+]
+
+variables_of_interest = [
+"ADLBLOCF_PARAMCD_CALPRO_AVAL",
+"ADLBLOCF_PARAMCD_CRP_AVAL",
+"ADEF1_PARAMCD_REMIS_AVALC",
+"ADEF1_PARAMCD_RESP_AVALC",
+"ADSESCD_PARAMCD_MOREMISS_AVALC",
+"ADSESCD_PARAMCD_MOSESCDT_AVAL",
+"ADBDC_PARAMCD_ULOCBLGR_AVALC",
+"ADBDC_PARAMCD_PCFIST_AVALC",
+"ADCDAI_PARAMCD_CDA202B_AVAL",
+"ADCDAI_PARAMCD_CDA201B_AVAL",
+"ADCDAI_PARAMCD_CDA203B_AVAL",
+"ADCDAI_PARAMCD_CDA205B_AVAL",
+"ADCDAI_PARAMCD_CDA206B_AVAL",
+"ADCDAI_PARAMCD_CDA207B_AVAL",
+"ADCDAI_PARAMCD_CDA208B_AVAL",
+"ADBDC_PARAMCD_PCBOWEL_AVALC",
+"ADIBDQ_PARAMCD_IBDQTOT_AVAL",
+"ADIBDQ_PARAMCD_IBDQREM_AVALC",
+"ADSESCD_PARAMCD_MORESPON_AVALC",
+"ADSL_TRT01P",
+"ADSL_TRT01PN",
+"ADSL_TRT01A",
+"ADSL_TRT01AN",
+"ADSL_AGE",
+"ADSL_SEX",
+"ADSL_RACE",
+"ADSL_COUNTRY",
+"ADSL_ETHNIC",
+"_ABLFL",
+"_APOBLFL",
+"_FASFL",
+"_SAFFL",
+"ADCDAI_PARAMCD_CDAIM_AVAL",
+"ADCDAI_PARAMCD_WAPSTLTF_AVAL",
+"ADSESCD_PARAMCD_MO25IMPR_AVALC",
+"ADBDC_PARAMCD_SESCDBL_AVAL",
+"ADSESCD_PARAMCD_MOSECDIL_AVAL",
+"ADSESCD_PARAMCD_MOSECDLC_AVAL",
+"ADSESCD_PARAMCD_MOSECDRC_AVAL",
+"ADSESCD_PARAMCD_MOSECDRE_AVAL",
+"ADSESCD_PARAMCD_MOSECDTC_AVAL",
+"ADSESCD_PARAMCD_MOPRSIZT_AVAL"
+]
+
+columns_to_keep = keys + variables_of_interest
+
+
+# ============================================================
+# VALIDATE INPUT FILE
+# ============================================================
+
+if not input_file.exists():
+    raise FileNotFoundError(
+        f"CSV file not found:\n{input_file}"
+    )
+
+print(f"Processing: {input_file.name}")
+
+
+# ============================================================
+# READ CSV
+# ============================================================
+
+df = pd.read_csv(
+    input_file,
+    low_memory=False
+)
+
+print(f"Original rows: {len(df):,}")
+print(f"Original columns: {len(df.columns):,}")
+
+
+# ============================================================
+# CHECK COLUMNS
+# ============================================================
+
+available_columns = [
+    col for col in columns_to_keep
+    if col in df.columns
+]
+
+missing_columns = [
+    col for col in columns_to_keep
+    if col not in df.columns
+]
+
+
+print("\nAvailable requested columns:")
+for col in available_columns:
+    print(f"  ✔ {col}")
+
+
+if missing_columns:
+    print("\nRequested columns NOT FOUND:")
+    
+    for col in missing_columns:
+        print(f"  ✘ {col}")
+
+
+# ============================================================
+# CREATE SLIM ARD
+# ============================================================
+
+df_slim = df[available_columns].copy()
+
+
+# ============================================================
+# EXPORT
+# ============================================================
+
+df_slim.to_csv(
+    output_file,
+    index=False,
+    encoding="utf-8-sig"
+)
+
+
+# ============================================================
+# SUMMARY
+# ============================================================
+
+print("\n========================================")
+print("SLIM ARD CREATED SUCCESSFULLY")
+print("========================================")
+
+print(f"Rows: {len(df_slim):,}")
+print(f"Columns: {len(df_slim.columns)}")
+
+print(f"\nOutput file:\n{output_file}")
+
+if missing_columns:
+    print(
+        f"\nWarning: {len(missing_columns)} "
+        "requested variable(s) were not found."
+    )
