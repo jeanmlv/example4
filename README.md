@@ -1,21 +1,9 @@
 # example4
 
-# Output folder in Domino workspace.
-# /mnt is usually writable, but this will fall back to the working directory.
-output_dir <- "/mnt"
-if (!dir.exists(output_dir) || file.access(output_dir, 2) != 0) {
-  output_dir <- file.path(getwd(), "figaro_uc301_mapping_output")
-}
-dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
+Hi Sonal, thanks for sharing this.
 
-# Optional curated configuration.
-# The scanner works even when this file is absent.
-config_candidates <- c(
-  "00_figaro_uc301_mapping_config.csv",
-  "/mnt/00_figaro_uc301_mapping_config.csv",
-  file.path(getwd(), "00_figaro_uc301_mapping_config.csv")
-)
-mapping_config_file <- config_candidates[file.exists(config_candidates)][1]
-if (length(mapping_config_file) == 0 || is.na(mapping_config_file)) {
-  mapping_config_file <- NA_character_
-}
+Yes, I think this is something we can explore. For ANTHEM, I have already created an ARD by integrating the available study data and structuring it at the subject/visit level, so the ARD could potentially serve as one of the data sources for the dashboard.
+
+However, I would need to check the specific metrics you listed against the data currently available in the ARD. Some of them, particularly operational metrics such as upload-to-central-read timing, number of machines/readers, image quality, and adjudication information, may come from med.ai/ORBIT or other operational sources rather than the SDTM/ADaM data currently used in the ARD.
+
+Regarding bringing the ARD into ORBIT, I’d be happy to discuss this with the ORBIT Analytics team and walk them through the current ARD structure and data flow. Then we can determine which metrics are already available in the ARD and which ones would require additional data sources.
