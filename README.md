@@ -1,9 +1,11 @@
 # example4
 
-Yes. The ANTHEM ARD includes a PARAMCD_DICT tab that serves as a data dictionary for the variables currently available in the ARD.
+Hi team, quick update from my side.
 
-Just to give you some context on how the ARD is structured: it was built by extracting and consolidating variables from the available ADaM datasets for the study into a single analysis-ready structure, organized mainly at the subject/visit level.
+I’ve updated the IBD trials database with the latest information and completed the ARDs for FIGARO UC301 and UC302, so we can now move forward with the variable gap analysis for these two studies.
 
-The column naming convention also provides traceability back to the source ADaM dataset. For example, ADSL_AGE represents the AGE variable coming from ADSL. For parameter-based datasets, the column names also retain information such as the source dataset, PARAMCD, and value variable, which makes it possible to trace an ARD variable back to its ADaM source.
+Also, now that the POWER gap analysis has been completed, we can start reviewing STARDUST and identifying any remaining gaps for this study as well.
 
-The PARAMCD_DICT tab provides a more convenient view of the parameters represented in the ARD, so I think that would be a good starting point to check whether the metrics you listed are already available.
+The updated information is available in the IBD Trials variable gap analysis folder in SharePoint.
+
+Please let me know if you have any questions.
