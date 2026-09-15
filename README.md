@@ -1,9 +1,9 @@
 # example4
 
-Hi Sonal, thanks for sharing this.
+Yes. The ANTHEM ARD includes a PARAMCD_DICT tab that serves as a data dictionary for the variables currently available in the ARD.
 
-Yes, I think this is something we can explore. For ANTHEM, I have already created an ARD by integrating the available study data and structuring it at the subject/visit level, so the ARD could potentially serve as one of the data sources for the dashboard.
+Just to give you some context on how the ARD is structured: it was built by extracting and consolidating variables from the available ADaM datasets for the study into a single analysis-ready structure, organized mainly at the subject/visit level.
 
-However, I would need to check the specific metrics you listed against the data currently available in the ARD. Some of them, particularly operational metrics such as upload-to-central-read timing, number of machines/readers, image quality, and adjudication information, may come from med.ai/ORBIT or other operational sources rather than the SDTM/ADaM data currently used in the ARD.
+The column naming convention also provides traceability back to the source ADaM dataset. For example, ADSL_AGE represents the AGE variable coming from ADSL. For parameter-based datasets, the column names also retain information such as the source dataset, PARAMCD, and value variable, which makes it possible to trace an ARD variable back to its ADaM source.
 
-Regarding bringing the ARD into ORBIT, I’d be happy to discuss this with the ORBIT Analytics team and walk them through the current ARD structure and data flow. Then we can determine which metrics are already available in the ARD and which ones would require additional data sources.
+The PARAMCD_DICT tab provides a more convenient view of the parameters represented in the ARD, so I think that would be a good starting point to check whether the metrics you listed are already available.
