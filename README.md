@@ -1,12 +1,13 @@
 # example4
 
-git init
-git branch -M main
-git add .
-git status
+git config --global user.name "Mendes, Jean [JRDUS Non-J&J]"
 
-git commit -m "Initial ARGES Commons dashboard"
+git config --global user.email "JMende95@its.jnj.com"
+
+git commit --amend --reset-author --no-edit
 
 git remote add origin https://sourcecode.jnj.com/scm/~jmende95/arges_commons_dash.git
+
+git remote -v
 
 git push -u origin main
