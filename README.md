@@ -1,13 +1,9 @@
 # example4
 
-git config --global user.name "Mendes, Jean [JRDUS Non-J&J]"
+Hi Eric, the Bitbucket repository for the ARGES Commons Streamlit dashboard is now available.
 
-git config --global user.email "JMende95@its.jnj.com"
+I included both the Streamlit app.py and the ARGES_COMMONS.xlsx inventory currently used as the dashboard data source.
 
-git commit --amend --reset-author --no-edit
+Repo: [cole aqui o link do Bitbucket]
 
-git remote add origin https://sourcecode.jnj.com/scm/~jmende95/arges_commons_dash.git
-
-git remote -v
-
-git push -u origin main
+Please let me know if you need anything else from my side to set it up.
