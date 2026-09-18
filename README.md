@@ -1,7 +1,9 @@
 # example4
 
-are you maintaining/updating this list based on the different ARGES programs? Also, could you help me understand the distinction between ARGES HEMI and ARGES UC/CD?
+Hi Ravi, I’ve updated the ARGES Commons inventory, and the latest version is now available in the V-Squad group on SharePoint. We can use this shared version going forward for our updates.
 
-Yesterday I also presented the ARGES Commons inventory and the dashboard I created to Pablo’s Video Squad team. They really liked the proposal, especially because it gives them a quicker way to visualize the available data and their overall workflow.
+Pablo also mentioned that for the information we’re not able to find or populate ourselves, we can reach out to Krishna, Pooya, Natalia, or Pablo for support.
 
-Going forward, I’ll also be working with Pablo’s team to populate and maintain the ARGES Commons inventory. So as we continue updating the file I shared with you, I can keep you posted on the changes and new information we add. That way, we can also make sure the relevant information between your list and the Commons inventory stays aligned.
+For example, in the 05_DATA_SPLITS tab, we currently have the detailed split information for JAK, UNIFI, and GALAXI-1 based on the data Krishna shared, but this information is still missing for several other studies. We can follow up with the team on these gaps as we go and gradually get the inventory fully updated.
+
+Here is the SharePoint link
