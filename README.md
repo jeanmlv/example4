@@ -1,5 +1,5 @@
 # example4
 
-Yes, I noticed the same. For now, we only have the dataset/split information that we could clearly associate with GALAXI-1. I’m not sure yet which datasets should be associated with GALAXI-2 and GALAXI-3.
+One suggestion: whenever we identify missing information or something that needs confirmation, we can add it to the comments tab. Then we can tag Krishna, Pooya, Natalia, or Pablo, depending on the topic, so they can help us clarify or locate the information.
 
-We can leave those fields blank for now and follow up with Krishna or the team to confirm whether separate datasets/split information are available for GALAXI-2 and GALAXI-3.
+This way, we can keep track of the open items in one place and gradually close the gaps as we update the inventory.
