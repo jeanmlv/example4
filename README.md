@@ -1,9 +1,12 @@
 # example4
 
-Hi Raju,
+Overall Status: In Progress (20% variable mapping completed) – WK104
 
-Thanks. From our side, the main objective is to identify the source/derivation of the remaining variables from our STARDUST variable assessment that we could not map from the currently available ADaM datasets.
+Completed
+• Aug 17 – Confirmed with Raju that he will support the review and mapping of the remaining variables for the STARDUST study.
+• Sep 16 – Shared the current STARDUST variable assessment with Raju and requested his support in identifying the source/derivation of the remaining variables.
+• Sep 18 – Raju requested clarification on the reporting/analysis associated with the Analysis datasets to determine the relevant metadata to be shared.
+• Sep 18 – Clarified that the current objective is to identify the source/derivation of the remaining variables not mapped from the available ADaM datasets, and that no specific reporting output is being targeted at this stage.
 
-We are not targeting a specific reporting output at this stage. Any available Analysis dataset metadata that could help us trace these variables to the corresponding dataset, parameter, or derivation would be helpful.
-
-Please let me know if you need any additional information from our side.
+Current Activity
+• Awaiting feedback from Raju and the relevant Analysis dataset metadata to continue the review and mapping of the remaining variables.
