@@ -1,5 +1,5 @@
 # example4
 
-For now, you can continue with the updates and follow-ups for the 03_ASSETS, 04_PROCESSING, and 05_DATA_SPLITS tabs, and I’ll continue working on the other tabs.
+Yes, I noticed the same. For now, we only have the dataset/split information that we could clearly associate with GALAXI-1. I’m not sure yet which datasets should be associated with GALAXI-2 and GALAXI-3.
 
-If you have any questions or need any help while updating them, just let me know. We can also check with the team together if there’s any information we’re unable to find.
+We can leave those fields blank for now and follow up with Krishna or the team to confirm whether separate datasets/split information are available for GALAXI-2 and GALAXI-3.
