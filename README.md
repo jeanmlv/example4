@@ -1,9 +1,5 @@
 # example4
 
-Hi Ravi, I’ve updated the ARGES Commons inventory, and the latest version is now available in the V-Squad group on SharePoint. We can use this shared version going forward for our updates.
+For now, you can continue with the updates and follow-ups for the 03_ASSETS, 04_PROCESSING, and 05_DATA_SPLITS tabs, and I’ll continue working on the other tabs.
 
-Pablo also mentioned that for the information we’re not able to find or populate ourselves, we can reach out to Krishna, Pooya, Natalia, or Pablo for support.
-
-For example, in the 05_DATA_SPLITS tab, we currently have the detailed split information for JAK, UNIFI, and GALAXI-1 based on the data Krishna shared, but this information is still missing for several other studies. We can follow up with the team on these gaps as we go and gradually get the inventory fully updated.
-
-Here is the SharePoint link
+If you have any questions or need any help while updating them, just let me know. We can also check with the team together if there’s any information we’re unable to find.
