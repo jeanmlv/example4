@@ -1,11 +1,7 @@
 # example4
 
-For example, if you are looking for the SES-CD Total Score:
+Thanks Pablo! Yes, the first one is definitely related to the dark mode — the KPI labels are there, but the font color doesn’t have enough contrast. I’ll adjust that so they remain visible in both light and dark modes.
 
-In the PARAMCD_DICT, search for SESTOT. You’ll see that SESTOT corresponds to SES-CD Total Score and comes from the ADSESCD dataset.
+And I really like the second suggestion. We could add a variable selector and, based on the selected variable, show its overall distribution and then break it down by week/visit. I’ll take a look at how we can integrate this into the dashboard, potentially using the ARD data we already have available.
 
-Then, in the ARD, search for SESTOT again. You’ll find the column ADSESCD_PARAMCD_SESTOT_AVAL, which contains the actual SES-CD Total Score values for each subject/visit.
-
-So the logic is basically: PARAMCD_DICT → identify the PARAMCD (SESTOT) → ARD → search SESTOT → check the corresponding values.
-
-You can follow the same approach for the other clinical measures you’re looking for
+Thanks for the suggestions! 😊
