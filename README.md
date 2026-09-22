@@ -1,11 +1,11 @@
 # example4
 
-Hi Krishna, the UNIFI-JR ARD is ready now. I’ve uploaded the files to the clinical_data folder. 😊
+For example, if you are looking for the SES-CD Total Score:
 
-You can use the PARAMCD_DICT.csv to see all the variables/parameters available for this study. I also created an XLSX version containing both the ARD and PARAMCD_DICT as separate tabs.
+In the PARAMCD_DICT, search for SESTOT. You’ll see that SESTOT corresponds to SES-CD Total Score and comes from the ADSESCD dataset.
 
-If you want to check the actual values for a specific parameter, you can search for it directly in the ARD CSV, or in the ARD tab of the XLSX file.
+Then, in the ARD, search for SESTOT again. You’ll find the column ADSESCD_PARAMCD_SESTOT_AVAL, which contains the actual SES-CD Total Score values for each subject/visit.
 
-I’m also going to run the Gap Analysis against our CD Variables of Interest list now. This will give us a structured view of which variables of interest are available in UNIFI-JR and which ones are missing. I’ll share that with you once it’s ready as well.
+So the logic is basically: PARAMCD_DICT → identify the PARAMCD (SESTOT) → ARD → search SESTOT → check the corresponding values.
 
-So we should have both views: the full set of variables available in the study through the ARD/PARAMCD_DICT, and the targeted assessment against our CD Variables of Interest.
+You can follow the same approach for the other clinical measures you’re looking for
