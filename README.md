@@ -1,7 +1,7 @@
 # example4
 
-Thanks Pablo! Yes, the first one is definitely related to the dark mode — the KPI labels are there, but the font color doesn’t have enough contrast. I’ll adjust that so they remain visible in both light and dark modes.
+Hi Fabio! Yes, for GALAXI-1 we do have SES-CD measures available in the ARD. I can see the SES-CD Total Score as well as the individual segment scores for Ileum, Left/Sigmoid Colon, Right Colon, Rectum, and Transverse Colon, mainly coming from ADSESCD.
 
-And I really like the second suggestion. We could add a variable selector and, based on the selected variable, show its overall distribution and then break it down by week/visit. I’ll take a look at how we can integrate this into the dashboard, potentially using the ARD data we already have available.
+I also see a parameter explicitly identified as “Involved GI Area (Assessed by Central Reader)” (CRDAREA), so there is central reader information in the study.
 
-Thanks for the suggestions! 😊
+I can check the underlying variables/metadata to confirm which of the SES-CD measures specifically correspond to the central reader grades and also see what other central-reader measures are available. I’ll let you know what I find.
