@@ -1,17 +1,8 @@
 # example4
 
-Unable to access Thea.View – nginx error / page temporarily unavailable
+Thanks for the suggestions, Pablo! I’ve updated the Streamlit app in Bitbucket and incorporated both points. The KPI labels are now visible in dark mode, and I’ve added a Variable Explorer to explore variable distributions overall and by visit.
 
-Hi Support Team,
+Thanks for the suggestions, Pablo! I’ve updated the Overview section of the dashboard and pushed the latest version to Bitbucket.
 
-I am currently unable to access Thea.View. When I try to open the application, I receive an nginx error page with the following message:
+For the Variable Explorer, you just need to upload the ARD CSV file and then select the variable of interest. The dashboard will automatically display the corresponding metrics and distributions, both overall and by visit.
 
-“The page you are looking for is temporarily unavailable. Please try again later.”
-
-The issue started today (September 23, 2026) and is preventing me from accessing Thea.View.
-
-Could you please check whether there is an issue with the application/service?
-
-I have attached a screenshot of the error for reference.
-
-Thank you.
