@@ -26,35 +26,34 @@ def render_sidebar_filters(
         # ==========================================================
         # ARGES Commons branding
         # ==========================================================
+        brand_html = (
+            f'<div style="padding:10px 0 20px 0;">'
+            f'<div style="'
+            f"font-family:'Times New Roman', Times, serif;"
+            f'font-size:28px;'
+            f'font-weight:400;'
+            f'line-height:1;'
+            f'letter-spacing:-1.2px;'
+            f'color:{JNJ_RED};'
+            f'white-space:nowrap;'
+            f'text-shadow:none;'
+            f'-webkit-font-smoothing:antialiased;'
+            f'text-rendering:geometricPrecision;'
+            f'">'
+            f'Johnson&amp;Johnson'
+            f'</div>'
+            f'<div style="'
+            f'font-size:12px;'
+            f'color:{MUTED};'
+            f'margin-top:6px;'
+            f'">'
+            f'ARGES Commons • Clinical Data Inventory'
+            f'</div>'
+            f'</div>'
+        )
+
         st.markdown(
-            f"""
-            <div style="padding: 10px 0 20px 0;">
-
-                <div style="
-                    font-family: 'Times New Roman', Times, serif;
-                    font-size: 28px;
-                    font-weight: 400;
-                    line-height: 1;
-                    letter-spacing: -1.2px;
-                    color: {JNJ_RED};
-                    white-space: nowrap;
-                    text-shadow: none;
-                    -webkit-font-smoothing: antialiased;
-                    text-rendering: geometricPrecision;
-                ">
-                    Johnson&amp;Johnson
-                </div>
-
-                <div style="
-                    font-size: 12px;
-                    color: {MUTED};
-                    margin-top: 6px;
-                ">
-                    ARGES Commons • Clinical Data Inventory
-                </div>
-
-            </div>
-            """,
+            brand_html,
             unsafe_allow_html=True,
         )
 
