@@ -1,9 +1,3 @@
 # example4
 
-Hi Basudeb, I’ve already clarified the previous questions with Pablo and updated the Privacy Assessment Form accordingly.
-Pablo also asked me to replace the “New request” entries with the corresponding SCOPE IDs for these previously approved studies:
-- ICONIC-UC / CD
-- DUET-ENCORE-UC / CD
-- REASON
-- CHARGE
-Do you know where I can find the SCOPE IDs for these studies, or is there a way to search for them in SCOPE?
+Hi Basudeb, I managed to find the SCOPE IDs for ICONIC-UC and ICONIC-CD (2026-725 and 2026-726), but I couldn’t find the SCOPE IDs for DUET-ENCORE-UC, DUET-ENCORE-CD, REASON, and CHARGE. Do you know where I could find these SCOPE IDs, or would you be able to check them on your side?
