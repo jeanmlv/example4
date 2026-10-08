@@ -1,11 +1,13 @@
 # example4
 
-Hi Brendon, good afternoon!
+import pandas as pd
+import streamlit as st
+from src.ui import show_table
 
-Krishna and I have been experiencing some issues with DSA (Thea.View). We uploaded some CSV files to the `clinical_data` folder for the ANTHEM-UC study, but the files are not showing up.
+def render(filtered,data):
+    st.header('Studies & Assets'); st.markdown('<div class="section-note">Study portfolio and the source assets registered for each study.</div>',unsafe_allow_html=True)
+    s=filtered['01_STUDIES']; a=filtered.get('03_ASSETS',pd.DataFrame()); c1,c2,c3,c4=st.columns(4); c1.metric('Studies',s['Study ID'].nunique() if 'Study ID' in s else 0); c2.metric('Assets',len(a)); c3.metric('Asset types',a['Asset Type'].nunique() if 'Asset Type' in a else 0); c4.metric('Sources',a['Source'].nunique() if 'Source' in a else 0)
+    t1,t2=st.tabs(['Studies','Assets'])
+    with t1: show_table(s,key='studies_table',link_cols=['ClinicalTrials Link'])
+    with t2: show_table(a,key='assets_table')
 
-The folder indicates that 6 items are available, but the page keeps loading without displaying them. We also experienced some server communication errors earlier today.
-
-Could you please take a look and let us know if there's an issue with DSA?
-
-Thanks for your help!
