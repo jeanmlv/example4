@@ -5,68 +5,44 @@ aws s3 ls s3://med-ai-clinical/cnto1959uco3001_ke_lte_w188/  > para ver Domino e
 
 cat /domino/datasets/local/clinical-trial-data/sync_all_medai_ClinicalTrial_s3.sh
 
-1- Primeiro, no Terminal do Domino, execute:
-
-DEST="/domino/datasets/local/clinical-trial-data/CNTO1959UCO3001-QUASAR-LTE-WK188"
-
-mkdir -p "$DEST"
-
-Isso criará a pasta:
-CNTO1959UCO3001-QUASAR-LTE-WK188
-
-1- Primeiro, no Terminal do Domino, execute:
-
-DEST="/domino/datasets/local/clinical-trial-data/CNTO1959UCO3001-QUASAR-LTE-WK188"
-
-mkdir -p "$DEST"
-
-Isso criará a pasta:
-CNTO1959UCO3001-QUASAR-LTE-WK188
-
-Antes de copiar, execute uma simulação:
-
-aws s3 sync \
-  "s3://med-ai-clinical/cnto1959uco3001_ke_lte_w188/" \
-  "$DEST/" \
-  --dryrun
-
-Esse comando mostrará os arquivos que seriam transferidos, sem efetuar a cópia.
-
-2- Transferir os dados
-
-Se a simulação estiver correta, o dataset de destino permitir escrita e a movimentação estiver autorizada pelas regras de acesso aos dados clínicos, execute:
-
-aws s3 sync \
-  "s3://med-ai-clinical/cnto1959uco3001_ke_lte_w188/" \
-  "$DEST/" \
-  --no-progress
-
-O comando preservará a estrutura dos diretórios:
-CNTO1959UCO3001-QUASAR-LTE-WK188
-load-3296
-load-3297
-
-Os arquivos internos de cada load também serão copiados.
-
-3-validar a importação
-
-Após a sincronização, execute:
-
-du -sh "$DEST"
-
-Para verificar o tamanho total dos dados importados.
-Depois:
-
-find "$DEST" -type f | wc -l
+1. Configurar as credenciais temporárias
+No Terminal do RStudio do Domino, execute:
+read -r -p "AWS Access Key ID: " MEDAI_KEY
+read -r -s -p "AWS Secret Access Key: " MEDAI_SECRET
+echo
+read -r -s -p "AWS Session Token: " MEDAI_TOKEN
+echo
 
 
-Para contar os arquivos.
+Cole cada valor diretamente do Med.AI quando solicitado. O Secret Key e o Session Token não aparecerão na tela enquanto você os digita.
+Importante: como o Access Key ID ficou visível no print, recomendo gerar novas credenciais antes de continuar. Não compartilhe as novas chaves ou tokens aqui.
+2. Testar o acesso ao S3
+Ainda no Terminal, execute:
+AWS_ACCESS_KEY_ID="$MEDAI_KEY" \
+AWS_SECRET_ACCESS_KEY="$MEDAI_SECRET" \
+AWS_SESSION_TOKEN="$MEDAI_TOKEN" \
+AWS_DEFAULT_REGION="us-east-1" \
+aws s3 ls \
+"s3://med-ai-clinical/cnto1959uco3001_kc_lte_w188/"
 
-E:
-ls -lah "$DEST"
+
+Observe que utilizei o caminho kc_lte_w188, conforme aparece no seu print mais recente.
+Se funcionar, esperamos:
+PRE load-3296/
+PRE load-3297/
 
 
-Para verificar os dois diretórios.
+3. Próxima etapa: sincronização
+Quando o teste funcionar, faremos a simulação da transferência para:
+/domino/datasets/local/clinical-trial-data/
+└── CNTO1959UCO3001-QUASAR-LTE-WK188/
+    ├── load-3296/
+    └── load-3297/
+
+
+A transferência será feita com aws s3 sync, utilizando as credenciais temporárias somente naquele comando, sem alterar as configurações permanentes do Domino.
+Depois da operação, também eliminaremos as variáveis temporárias da sessão.
+Execute os passos 1 e 2 e me envie apenas o resultado da listagem S3, sem mostrar as credenciais. Assim confirmamos o acesso antes de copiar os arquivos clínicos.
 
 
 
