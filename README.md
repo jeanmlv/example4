@@ -1,16 +1,29 @@
 # example4
 
 
-Metric	Interpretation
-unique_patients_at_visit	Number of distinct patients with at least one video file identified at the specified visit. Patients are counted once per visit, regardless of the number of video files available.
-file_items	Total number of video files identified at the specified visit, including original, transcoded, or other file versions. Multiple files may correspond to the same underlying recording.
-technical_recordings_est	Estimated number of distinct technical video recordings at the specified visit after metadata-based deduplication. This estimate may not represent the exact number of unique clinical videos.
-cumulative_unique_patients	Cumulative number of distinct patients with at least one video available at the specified scheduled visit or any preceding scheduled visit. Each patient is counted only once across visits.
+Hi Pablo,
 
-Unscheduled visits: Cumulative unique patient counts are not calculated for unscheduled visits because these visits do not have a fixed position in the predefined study visit sequence. They are reported separately using visit-specific patient and video counts.
+I've completed the initial video inventory and coverage analysis for QUASAR using the rawdata and processed folders available in Thea.View.
 
-visit_type	Classification of the visit as scheduled or unscheduled. Scheduled visits follow the predefined study visit sequence, while unscheduled visits occur outside that sequence.
-study	Clinical study associated with the extracted video records.
+I developed a Python workflow to extract the video metadata, calculate the visit-level metrics, and perform validation checks.
 
+I've attached an Excel summary organized into three tabs: **raw_videos**, **processed_videos**, and **definitions**.
 
+For each visit, the analysis provides:
+
+- **Unique patients at visit:** Number of distinct patients with at least one video available at that visit.
+- **Video files:** Total number of video files identified.
+- **Estimated distinct recordings:** Number of technical recordings after metadata-based deduplication.
+- **Cumulative unique patients:** Number of distinct patients with at least one video available at or before the specified scheduled visit.
+
+Unscheduled visits are reported separately, without cumulative counts, as they do not follow a fixed visit sequence.
+
+One point I'd like to confirm regarding your second question: the current cumulative metric counts patients with at least one video across the visits up to that point. If you meant patients with videos available at **every scheduled visit up to and including that visit**, I can calculate that longitudinal coverage metric as well.
+
+Also, the processed folder contains more video records than rawdata, so the estimated distinct recording counts should be considered preliminary until the remaining differences are fully reconciled.
+
+Once we confirm the metrics, we can work on automating the reporting and integrating it into the ARGES Commons dashboard.
+
+Best regards,
+Jean
         
