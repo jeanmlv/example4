@@ -1,14 +1,8 @@
 # example4
 
 
-Hi Eric, good afternoon!
+Thanks, Eric! Yes, in my Streamlit script, I've already configured the maximum file upload size to 2 GB (`server.maxUploadSize = 2048`).
 
-I'm experiencing an issue with the **Variable Explorer** in the ARGES Commons Dashboard on Domino.
+Since the file loads successfully in your local environment, it seems the issue may be related to the Domino App configuration rather than the Streamlit code.
 
-When I try to upload an ARD CSV file, the upload fails and displays an error, even though the file size is well below the configured 2 GB limit (the file I'm testing is only 143.4 MB).
-
-Could you please check if there is any issue with the file upload configuration or the Domino App environment?
-
-I've attached a screenshot for reference.
-
-Thanks for your help!
+Do you know if there's an additional upload size limit on the Domino side that we need to adjust?
